@@ -23,6 +23,6 @@ int main() {
   pre_auton();
 
   while (true) {
-    wait(100, msec);
+    wait(20, msec); //changed to 20 msec to test - Josh
   }
 }
