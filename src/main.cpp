@@ -9,8 +9,10 @@
 
 
 #include "vex.h"
-#include "auton.h"
-#include "usercontrol.h"
+
+void pre_auton(void);
+void autonomous(void);
+void usercontrol(void);
 
 using namespace vex;
 
