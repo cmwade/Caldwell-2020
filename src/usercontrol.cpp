@@ -1,5 +1,4 @@
 #include "vex.h"
-#include "odom.h"
 
 void usercontrol(void) {
   float throttle;
