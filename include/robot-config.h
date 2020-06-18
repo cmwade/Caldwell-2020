@@ -2,6 +2,16 @@ using namespace vex;
 
 extern brain Brain;
 
+// VEXcode devices
+extern motor LF;
+extern motor LB;
+extern motor RB;
+extern motor RF;
+extern encoder EncoderL;
+extern encoder EncoderR;
+extern encoder EncoderB;
+extern controller con;
+
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Text.
  *
