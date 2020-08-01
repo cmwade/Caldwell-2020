@@ -166,7 +166,7 @@ static void driveReset(float X = 0, float Y = 0, float OrientationDeg = 0) {
   prevGlobalY = Y;
 }
 
-static void turnSlide( float endX, float endY, float endRotationDeg, float maxDriveValue = driveMax, float maxTurnValue = turnMax, float timeoutMsec = 999999, float drivePValue = driveP, float turnPValue = turnP, float driveDValue = driveD, float turnDValue = turnD, float driveErrorMargin = errorMarginBase, float turnErrorMarginDeg = errorMarginTurnDeg) {
+static void turnSlide( float endX, float endY, float endRotationDeg, bool holdAtTarget = true, float maxDriveValue = driveMax, float maxTurnValue = turnMax, float timeoutMsec = 999999, float drivePValue = driveP, float turnPValue = turnP, float driveDValue = driveD, float turnDValue = turnD, float driveErrorMargin = errorMarginBase, float turnErrorMarginDeg = errorMarginTurnDeg) {
   endRotationDeg = reduceAngle0to360(endRotationDeg);
 
   float turnError = reduceAngleMinus180to180(endRotationDeg - absOrientationDeg);
@@ -178,7 +178,7 @@ static void turnSlide( float endX, float endY, float endRotationDeg, float maxDr
   float prevTurnError = turnError;
   float prevDriveError = driveError;
 
-  while( ((reduceAngleMinus180to180(turnError)) > turnErrorMarginDeg || (reduceAngleMinus180to180(turnError)) < -turnErrorMarginDeg || driveError > driveErrorMargin || driveError < -driveErrorMargin) && Brain.timer(timeUnits::msec) < timeoutMsec){
+  while( ((reduceAngleMinus180to180(turnError)) > turnErrorMarginDeg || (reduceAngleMinus180to180(turnError)) < -turnErrorMarginDeg || driveError > driveErrorMargin || driveError < -driveErrorMargin) && Brain.timer(timeUnits::msec) < timeoutMsec && holdAtTarget ==1){
     turnError = reduceAngleMinus180to180(endRotationDeg - absOrientationDeg);
     driveError = sqrt(pow((endX - absGlobalX), 2) + pow((endY - absGlobalY), 2));
 
