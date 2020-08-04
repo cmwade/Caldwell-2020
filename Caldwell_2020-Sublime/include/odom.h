@@ -2,46 +2,54 @@ using namespace vex;
 
 static task positiontrackingtask;
 
-static float rWidth = 6.184; //horizontal distance from the tracking center to the right tracking wheel
-static float lWidth = 6.184; //horizontal distance from the tracking center to the right tracking wheel
-static float bLength = 6.184; //vertical distance from the tracking center to the back tracking wheel
+//Physical Distances on the Bot
+static float rWidth = 6.184;
+static float lWidth = 6.184;
+static float bLength = 6.184;
 
-static float rWheelRatio = -0.02477; //ratio of the distance traveled to the right wheel rotation in degrees, used to calculate distance based on revolutions
-static float lWheelRatio = 0.02469; //ratio of the distance traveled to the left wheel rotation in degrees, used to calculate distance based on revolutions
-static float bWheelRatio = -0.02465; //ratio of the distance traveled to the back wheel rotation in degrees, used to calculate distance based on revolutions
+//Ratios of Odom Wheels
+static float rWheelRatio = -0.02477;
+static float lWheelRatio = 0.02469; 
+static float bWheelRatio = -0.02465; 
 
-static float prevL = 0; //initializes the storage for the last value of the left wheel, used to calculate change
-static float prevR = 0; //initializes the storage for the last value of the right wheel, used to calculate change
-static float prevB = 0; //initializes the storage for the last value of the back wheel, used to calculate change
+//Variables to Calulate Deltas
+static float prevL = 0;
+static float prevR = 0; 
+static float prevB = 0;
 
-static float prevOrientationRad = 0; //storage for the last absolute orientation in radians, used to calculate change
-static float prevGlobalX = 0; //initializes the storage for the last absolute x value in inches
-static float prevGlobalY = 0; //initializes the storage for the last absolute y value in inches
-static float absOrientationRad = 0; //absolute orientation in radians
-static float absOrientationDeg = 0; //absolute orientation in radians
+//Variables for Position
+static float prevOrientationRad = 0;
+static float prevGlobalX = 0; 
+static float prevGlobalY = 0; 
+static float absOrientationRad = 0; 
+static float absOrientationDeg = 0; 
 
-static float localX = 0; //x value relative to the chord of the tracking center's arc
-static float localY = 0; //y value relative to the chord of the tracking center's arc
+//Used as a Reference for Global X and Y
+static float localX = 0;
+static float localY = 0;
 
-static float deltaL = 0; //change in the left wheel value since last checked
-static float deltaR = 0; //change in the right wheel value since last checked
-static float deltaB = 0; //change in the back wheel value since last checked
+//Deltas in Wheels
+static float deltaL = 0; 
+static float deltaR = 0;
+static float deltaB = 0; 
 
-static float absGlobalX = 0; //absolute x position in inches
-static float absGlobalY = 0; //absolute y position in inches
+//Absolute Positions
+static float absGlobalX = 0; 
+static float absGlobalY = 0; 
 
-static float turnP = 1.2; //for later use in motion control
+//Constants for Motion Control
+static float turnP = 1.2;
 static float driveP = 6;
 static float turnD = 20;
 static float driveD = 40;
 static float turnMax = 40;
 static float driveMax = 60;
-
-static float errorMarginBase = 1; //for later use in motion control
+static float errorMarginBase = 1;
 static float errorMarginTurnDeg = 0.5;
 
 static float pi = 3.14159265359;
 
+//Encoder Values
 static float currentL = 0;
 static float currentR = 0;
 static float currentB = 0;
@@ -77,59 +85,62 @@ static void driveHold( void ) {
 }
 
 static void updateEncoders() {
-    currentL = (EncoderL.rotation(rotationUnits::deg))*(lWheelRatio); //gets the rotation of the left wheel
-    currentR = (EncoderR.rotation(rotationUnits::deg))*(rWheelRatio); //gets the rotation of the right wheel
-    currentB = (EncoderB.rotation(rotationUnits::deg))*(bWheelRatio); //gets the rotation of the back wheel
+    currentL = (EncoderL.rotation(rotationUnits::deg))*(lWheelRatio); 
+    currentR = (EncoderR.rotation(rotationUnits::deg))*(rWheelRatio); 
+    currentB = (EncoderB.rotation(rotationUnits::deg))*(bWheelRatio); 
 
-    deltaL = currentL - prevL; //change in the left wheel distance since last checked
-    deltaR = currentR - prevR; //change in the right wheel distance since last checked
-    deltaB = currentB - prevB; //change in the back wheel distance since last checked
+    deltaL = currentL - prevL; 
+    deltaR = currentR - prevR;
+    deltaB = currentB - prevB;
 
-    prevL = currentL; //sets up the last left wheel value for next use
-    prevR = currentR; //sets up the last right wheel value for next use
-    prevB = currentB; //sets up the last back wheel value for next use
+    prevL = currentL;
+    prevR = currentR;
+    prevB = currentB; 
 }
 
 static void updatePosition() {
-    absOrientationRad = (currentL-currentR)/(rWidth + lWidth); //calculates the absolute orientation of the robot in radians
+    absOrientationRad = (currentL-currentR)/(rWidth + lWidth); 
 
-    absOrientationDeg = reduceAngle0to360(absOrientationRad*(180/pi)); //converts to degrees for display only
+    absOrientationDeg = reduceAngle0to360(absOrientationRad*(180/pi)); 
 
-    float deltaA = (deltaL-deltaR)/(rWidth + lWidth); // change in the orientation since last checked
+    float deltaA = (deltaL-deltaR)/(rWidth + lWidth); 
 
-    if (deltaA == 0) { //avoids dividing by zero
+    //Calulates coordinates relative to the chord of the robot's arc.
+    if (deltaA == 0) { //Prevents divide by zero error.
         localX = deltaB;
         localY = deltaR;
     } else {
-        localX = (2*sin(deltaA/2))*((deltaB/deltaA)+bLength); //calculates the local change in x and y values, with the chord of the robot's arc as the positive y-axi
+        localX = (2*sin(deltaA/2))*((deltaB/deltaA)+bLength); 
         localY = (2*sin(deltaA/2))*((deltaR/deltaA)+rWidth);
     }
 
     float localPolarAngle = 0;
     float localPolarLength = 0;
 
-    if (localX == 0 && localY == 0){ //prevents two zeroes from being passed to the atan2 function
+    //Caluclates polar coordinates.
+    if (localX == 0 && localY == 0){ //Prevents two zeros from being passed to atan2.
         localPolarAngle = 0;
         localPolarLength = 0;
     } else {
-        localPolarAngle = atan2(localY, localX); //finds the angle to convert to polar coordinates
-        localPolarLength = sqrt(pow(localX, 2) + pow(localY, 2)); //finds the length to convert to polar coordinates
+        localPolarAngle = atan2(localY, localX); 
+        localPolarLength = sqrt(pow(localX, 2) + pow(localY, 2)); 
     }
 
-    float globalPolarLength = localPolarLength; //length doesn't change when going from local to global, only rotation
-    float globalPolarAngle = localPolarAngle - prevOrientationRad - (deltaA/2); //takes into account the previous rotation of the robot
+    //Converts polar coordinates to global coordinates.
+    float globalPolarLength = localPolarLength; 
+    float globalPolarAngle = localPolarAngle - prevOrientationRad - (deltaA/2);
 
-    float globalX = globalPolarLength*cos(globalPolarAngle); //finds the global change in x since last cycle
-    float globalY = globalPolarLength*sin(globalPolarAngle); //finds the global change in y since last cycle
+    float globalX = globalPolarLength*cos(globalPolarAngle); 
+    float globalY = globalPolarLength*sin(globalPolarAngle); 
 
+    //Calulates absolute position and orientation.
+    absGlobalX = prevGlobalX + globalX; 
+    absGlobalY = prevGlobalY + globalY; 
 
-    absGlobalX = prevGlobalX + globalX; //updates the absolute x position of the robot
-    absGlobalY = prevGlobalY + globalY; //updates the absolute y position of the robot
+    prevGlobalX = absGlobalX;
+    prevGlobalY = absGlobalY;
 
-    prevGlobalX = absGlobalX; //sets up the last global x value for next use
-    prevGlobalY = absGlobalY; //sets up the last global y value for next use
-
-    prevOrientationRad = absOrientationRad; //sets up orientation for next use
+    prevOrientationRad = absOrientationRad;
 }
 
 static int positionTrack() {
@@ -143,7 +154,6 @@ static int positionTrack() {
     Brain.Screen.printAt(1, 80, "Left Wheel: %f Inches, %f Degrees", currentL, EncoderL.rotation(vex::rotationUnits::deg));
     Brain.Screen.printAt(1, 100, "Right Wheel: %f Inches, %f Degrees", currentR, EncoderR.rotation(vex::rotationUnits::deg));
     Brain.Screen.printAt(1, 120, "Back Wheel: %f Inches, %f Degrees", currentB, EncoderB.rotation(vex::rotationUnits::deg));
-    Brain.Screen.drawCircle(round(Brain.timer(timeUnits::msec)/75), round(currentL)+50, 1);
   }
 }
 
@@ -178,7 +188,7 @@ static void turnSlide( float endX, float endY, float endRotationDeg, bool holdAt
   float prevTurnError = turnError;
   float prevDriveError = driveError;
 
-  while( ((reduceAngleMinus180to180(turnError)) > turnErrorMarginDeg || (reduceAngleMinus180to180(turnError)) < -turnErrorMarginDeg || driveError > driveErrorMargin || driveError < -driveErrorMargin) && Brain.timer(timeUnits::msec) < timeoutMsec && holdAtTarget ==1){
+  while( ((reduceAngleMinus180to180(turnError)) > turnErrorMarginDeg || (reduceAngleMinus180to180(turnError)) < -turnErrorMarginDeg || driveError > driveErrorMargin || driveError < -driveErrorMargin) && Brain.timer(timeUnits::msec) < timeoutMsec && holdAtTarget == true){
     turnError = reduceAngleMinus180to180(endRotationDeg - absOrientationDeg);
     driveError = sqrt(pow((endX - absGlobalX), 2) + pow((endY - absGlobalY), 2));
 
@@ -191,6 +201,7 @@ static void turnSlide( float endX, float endY, float endRotationDeg, bool holdAt
     prevTurnError = turnError;
     prevDriveError = driveError;
 
+    //Prevents large values from being passed.
     if( finalTurn > maxTurnValue ) {
       finalTurn = maxTurnValue;
     }
@@ -210,7 +221,7 @@ static void turnSlide( float endX, float endY, float endRotationDeg, bool holdAt
       finalDrive*(cos(3*pi/4-atan2(endY - absGlobalY, endX - absGlobalX)-absOrientationRad))-finalTurn
     );
 
-    task::sleep(5); //changing this sleep time results in derivative values being thrown off
+    task::sleep(5); //Changing this sleep time results in derivative values being thrown off.
   }
   driveHold();
 }
