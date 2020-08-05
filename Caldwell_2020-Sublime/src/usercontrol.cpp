@@ -44,17 +44,17 @@ void usercontrol(void) {
         RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
         RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
       }
-    } else if (con.ButtonL1.pressing()) { //Spinning Rollers Down
+    } else if (con.ButtonL1.pressing()) { //Spinning only Intakes and Main Roller In
       if (con.ButtonL2.pressing()){
-        IntakeR.stop(brakeType::hold);
-        IntakeL.stop(brakeType::hold);
-        RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-      } else { //Spinning Intakes and Main Roller In
         IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
         IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
         RollerBack.stop(brakeType::coast);
+      } else { //Spinning only the Rollers In
+        IntakeR.stop(brakeType::hold);
+        IntakeL.stop(brakeType::hold);
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
       }
     } else {
       IntakeR.stop(brakeType::hold);
