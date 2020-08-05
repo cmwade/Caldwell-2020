@@ -6,25 +6,61 @@ void usercontrol(void) {
   float turn;
   positiontrackingtask = task( positionTrack );
   while(1) {
-        throttle = con.Axis3.value();
-        strafe = con.Axis4.value();
-        turn = con.Axis1.value();
+        
+    //Drivebase Code
 
-        LF.spin(directionType::fwd, (throttle+strafe+turn), velocityUnits::pct);
-        LB.spin(directionType::fwd, (throttle-strafe+turn), velocityUnits::pct);
-        RB.spin(directionType::fwd, (throttle+strafe-turn), velocityUnits::pct);
-        RF.spin(directionType::fwd, (throttle-strafe-turn), velocityUnits::pct);
+    throttle = con.Axis3.value();
+    strafe = con.Axis4.value();
+    turn = con.Axis1.value();
 
-        if(con.ButtonR1.pressing()){
-          IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
-          IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
-        } else if (con.ButtonR2.pressing()) {
-          IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
-          IntakeL.spin(directionType::rev, 100, velocityUnits::pct);
-        } else {
-          IntakeR.stop(brakeType::hold);
-          IntakeL.stop(brakeType::hold);
-        }
-        wait(20, msec);
+    LF.spin(directionType::fwd, (throttle+strafe+turn), velocityUnits::pct);
+    LB.spin(directionType::fwd, (throttle-strafe+turn), velocityUnits::pct);
+    RB.spin(directionType::fwd, (throttle+strafe-turn), velocityUnits::pct);
+    RF.spin(directionType::fwd, (throttle-strafe-turn), velocityUnits::pct);
+
+    //Intake and Roller Code
+
+    if (con.ButtonR1.pressing()) { //Spinning Everything In
+      if (con.ButtonL2.pressing()){
+        IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
+        IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+      } else { //Spinning Everything Out the Back Roller
+        IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
+        IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+      }
+    } else if (con.ButtonR2.pressing()) { //Spinning Everything Out the Bottom
+        if (con.ButtonL2.pressing()){
+        IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
+        IntakeL.spin(directionType::rev, 100, velocityUnits::pct);
+        RollerMain.stop(brakeType::coast);
+        RollerBack.stop(brakeType::coast);
+      } else { //Opening the Intakes
+        IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
+        IntakeL.spin(directionType::rev, 100, velocityUnits::pct);
+        RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+      }
+    } else if (con.ButtonL1.pressing()) { //Spinning only Intakes and Main Roller In
+      if (con.ButtonL2.pressing()){
+        IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
+        IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.stop(brakeType::coast);
+      } else { //Spinning only the Rollers In
+        IntakeR.stop(brakeType::hold);
+        IntakeL.stop(brakeType::hold);
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+      }
+    } else {
+      IntakeR.stop(brakeType::hold);
+      IntakeL.stop(brakeType::hold);
+      RollerMain.stop(brakeType::coast);
+      RollerBack.stop(brakeType::coast);
+    }
   }
 }

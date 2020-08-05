@@ -8,15 +8,26 @@ using code = vision::code;
 brain Brain;
 
 // VEXcode device constructors
+
+//Drive Motors
 motor LF = motor(PORT12, ratio18_1, false);
 motor LB = motor(PORT11, ratio18_1, false);
 motor RB = motor(PORT20, ratio18_1, true);
 motor RF = motor(PORT19, ratio18_1, true);
+
+//Intakes
 motor IntakeR = motor(PORT18, ratio36_1, true);
 motor IntakeL = motor(PORT13, ratio36_1, false);
+
+//Rollers
+motor RollerBack = motor(PORT9, ratio18_1, false);
+motor RollerMain = motor(PORT10, ratio18_1, true);
+
+//Odom Encoders
 encoder EncoderL = encoder(Brain.ThreeWirePort.C);
 encoder EncoderR = encoder(Brain.ThreeWirePort.E);
 encoder EncoderB = encoder(Brain.ThreeWirePort.G);
+
 controller con = controller(primary);
 
 // VEXcode generated functions

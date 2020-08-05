@@ -9,6 +9,8 @@ extern motor RB;
 extern motor RF;
 extern motor IntakeR;
 extern motor IntakeL;
+extern motor RollerMain;
+extern motor RollerBack;
 extern encoder EncoderL;
 extern encoder EncoderR;
 extern encoder EncoderB;
