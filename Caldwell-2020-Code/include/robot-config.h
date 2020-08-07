@@ -3,6 +3,8 @@ using namespace vex;
 extern brain Brain;
 
 // VEXcode devices
+
+//Motors
 extern motor LF;
 extern motor LB;
 extern motor RB;
@@ -11,9 +13,14 @@ extern motor IntakeR;
 extern motor IntakeL;
 extern motor RollerMain;
 extern motor RollerBack;
+
+//Sensors
 extern encoder EncoderL;
 extern encoder EncoderR;
 extern encoder EncoderB;
+extern limit FANG;
+extern pot HoodPot;
+
 extern controller con;
 
 /**

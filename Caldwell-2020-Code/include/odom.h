@@ -61,6 +61,10 @@ float reduceAngleMinus180to180( float angleDeg );
 
 void setDriveVelocity( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpeed );
 
+void setDriveVoltage( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpeed); 
+
+void goalAlign( float voltage, float timeoutMsec = 999999 );
+
 void driveHold( void );
 
 void updateEncoders();

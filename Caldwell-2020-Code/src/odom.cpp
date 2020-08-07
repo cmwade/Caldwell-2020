@@ -78,6 +78,19 @@ void setDriveVelocity( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpee
   RF.spin(directionType::fwd, RFSpeed, velocityUnits::pct);
 }
 
+void setDriveVoltage( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpeed) {
+  LF.spin(directionType::fwd, LFSpeed, voltageUnits::volt);
+  LB.spin(directionType::fwd, LBSpeed, voltageUnits::volt);
+  RB.spin(directionType::fwd, RBSpeed, voltageUnits::volt);
+  RF.spin(directionType::fwd, RFSpeed, voltageUnits::volt);
+}
+
+void goalAlign( float voltage, float timeoutMsec) {
+  while ( not( FANG.pressing() ) and Brain.timer(timeUnits::msec) < timeoutMsec) {
+    setDriveVoltage( voltage, voltage, voltage, voltage);
+  }
+}
+
 void driveHold( void ) {
   LF.stop(brakeType::hold);
   LB.stop(brakeType::hold);
