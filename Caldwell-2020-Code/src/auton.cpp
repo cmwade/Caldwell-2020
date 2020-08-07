@@ -1,6 +1,6 @@
 #include "vex.h"
 
-void RedRight( void ) {
+void Test( void ) {
   positiontrackingtask = task(positionTrack);
 
   driveReset(0, 0, 0);
@@ -19,5 +19,5 @@ void RedRight( void ) {
 }
 
 void autonomous(void) {
-  RedRight(); //Results from Auton Selector Determine the Auto Chosen
+  Test(); //Results from Auton Selector Determine the Auto Chosen
 }

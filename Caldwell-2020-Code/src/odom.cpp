@@ -3,15 +3,15 @@
 task positiontrackingtask;
 
 //Physical Distances on the Bot
-float rWidth = 6.184;
-float lWidth = 6.184;
+float rWidth = 5.935;
+float lWidth = 5.935;
 
-float bLength = 6.184;
+float bLength = 5.935;
 
 //Ratios of Odom Wheels
-float rWheelRatio = -0.02477;
-float lWheelRatio = 0.02469; 
-float bWheelRatio = -0.02465; 
+float rWheelRatio = -0.024948;
+float lWheelRatio = 0.024742; 
+float bWheelRatio = -0.024603; 
 
 //Variables to Calulate Deltas
 float prevL = 0;
@@ -171,7 +171,7 @@ int positionTrack() {
   }
 }
 
-void driveReset(float X = 0, float Y = 0, float OrientationDeg = 0) {
+void driveReset(float X, float Y, float OrientationDeg) {
   EncoderR.setRotation(0, rotationUnits::deg);
   EncoderL.setRotation((rWidth+lWidth)*(pi/180)*(OrientationDeg)/(lWheelRatio), rotationUnits::deg);
   EncoderB.setRotation(0, rotationUnits::deg);
