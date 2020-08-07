@@ -19,5 +19,5 @@ void RedRight( void ) {
 }
 
 void autonomous(void) {
-  RedRight();
+  RedRight(); //Results from Auton Selector Determine the Auto Chosen
 }
