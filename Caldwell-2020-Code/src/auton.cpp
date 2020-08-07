@@ -1,6 +1,6 @@
 #include "vex.h"
 
-void autonomous(void) {
+void RedRight( void ) {
   positiontrackingtask = task(positionTrack);
 
   driveReset(0, 0, 0);
@@ -16,4 +16,8 @@ void autonomous(void) {
   turnSlide(24, 24, 180);
   turnSlide(24, 0, 90);
   turnSlide(0, 0, 0);
+}
+
+void autonomous(void) {
+  RedRight();
 }
