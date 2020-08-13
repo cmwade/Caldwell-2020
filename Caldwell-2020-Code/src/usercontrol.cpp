@@ -1,9 +1,45 @@
 #include "vex.h"
 
+void stopIntakes(void) {
+  IntakeL.stop(brakeType::hold);
+  IntakeR.stop(brakeType::hold);
+}
+
+void intake(void) { //intake in
+  IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
+  IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
+}
+
+void intakeOpen(void) { //open the intakes
+  IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
+  IntakeL.spin(directionType::rev, 100, velocityUnits::pct);
+}
+
+void stopRollers(void) {
+  RollerMain.stop(brakeType::hold);
+  RollerBack.stop(brakeType::hold);
+}
+
+void rollUp(void) { //roll balls up the snail
+  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+  RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+}
+
+void rollDown(void) { //roll balls down the snail
+  RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
+  RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+}
+
+void rollOut(void) { //roll balls out the back
+  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+  RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+}
+
 void usercontrol(void) {
   float throttle;
   float strafe;
   float turn;
+  bool reject = false;
   positiontrackingtask = task( positionTrack );
   while(1) {
         
@@ -20,31 +56,25 @@ void usercontrol(void) {
 
     //Intake and Roller Code
 
-    //Intakes
-    if (con.ButtonL1.pressing()) { //Intake In
-      IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
-      IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
-    } else if (con.ButtonL2.pressing()) { //Open Intakes
-      IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
-      IntakeL.spin(directionType::rev, 100, velocityUnits::pct);
-    } else {
-      IntakeR.stop(brakeType::hold);
-      IntakeL.stop(brakeType::hold);
-    }
+    bool R1 = con.ButtonR1.pressing();
+    bool R2 = con.ButtonR2.pressing();
+    bool L1 = con.ButtonL1.pressing();
+    bool L2 = con.ButtonL2.pressing();
 
-    //Rollers
-    if (con.ButtonR1.pressing() and con.ButtonR2.pressing()) { //Roll Out Back
-      RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-      RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-    } else if (con.ButtonR1.pressing()) { //Roll Everything In
-      RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-      RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-    } else if (con.ButtonR2.pressing()) { //Roll Everything Out
-      RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
-      RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-    } else {
-      RollerMain.stop(brakeType::coast);
-      RollerBack.stop(brakeType::coast);
-    }
+    reject = L1; //L1: Activate Reject Mode
+
+    if(L2) { //L2: Roll Down
+      rollDown();
+    } else {stopRollers();}
+
+    if(R1) { //R1: Intake & Roll up, or Roll Out if Reject Mode.
+      intake();
+      if(reject) {rollOut();}
+      else {rollUp();}
+    } else {stopIntakes(); stopRollers();}
+
+    if(R2) { //R2: Open Intakes
+      intakeOpen();
+    } else {stopIntakes();}
   }
 }
