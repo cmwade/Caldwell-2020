@@ -17,6 +17,7 @@
 
 #include "robot-config.h"
 #include "odom.h"
+#include "vision-sensor.h"
 
 #define waitUntil(condition)                                                   \
   do {                                                                         \
