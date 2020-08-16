@@ -65,16 +65,19 @@ void usercontrol(void) {
 
     if(L2) { //L2: Roll Down
       rollDown();
-    } else {stopRollers();}
+    }
 
     if(R1) { //R1: Intake & Roll up, or Roll Out if Reject Mode.
       intake();
       if(reject) {rollOut();}
       else {rollUp();}
-    } else {stopIntakes(); stopRollers();}
+    }
 
     if(R2) { //R2: Open Intakes
       intakeOpen();
-    } else {stopIntakes();}
+    }
+
+    if (!R1 && !R2) {stopIntakes();}
+    if (!L2 && !R1) {stopRollers();}
   }
 }
