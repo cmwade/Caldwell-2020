@@ -4,7 +4,6 @@ void usercontrol(void) {
   float throttle;
   float strafe;
   float turn;
-  positiontrackingtask = task( positionTrack );
   while(1) {
         
     //Drivebase Code
