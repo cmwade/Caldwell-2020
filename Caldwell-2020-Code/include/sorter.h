@@ -3,8 +3,8 @@ using namespace vex;
 extern task ballsortertask;
 
 extern bool reject;
-extern vision::signature unwantedColor;
+extern int unwantedColor;
 
-vex::vision::signature getBall();
+int getBall();
 
 int ballSort();

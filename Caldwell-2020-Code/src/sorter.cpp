@@ -1,11 +1,16 @@
 #include "vex.h"
 
+#define NO_BALL 0
+#define BLUE 1
+#define RED 2
+
 task ballsortertask = task(ballSort);
 
 bool reject = false;
-vision::signature unwantedColor;
 
-vex::vision::signature getBall() { //gets whether there is a ball in front of the sensor, and what color
+int unwantedColor=RED;
+
+int getBall() { //gets whether there is a ball in front of the sensor, and what color
   int largestRed = 0;
   int largestBlue = 0;
   int width,height,size;
@@ -23,12 +28,16 @@ vex::vision::signature getBall() { //gets whether there is a ball in front of th
     size=width*height;
     if (size>600) {largestBlue=width*height;}
   }
-  if (largestBlue>largestRed) {return BLUE_BALL;}
-  else if (largestRed>largestBlue) {return RED_BALL;}
-  else {return NOTHING;}
+  if (largestBlue>largestRed) {return BLUE;}
+  else if (largestRed>largestBlue) {return RED;}
+  else {return NO_BALL;}
 }
 
 int ballSort() { //callback for the ball sorting task
-  //TODO: write this
+  while(true) {
+    int lastColor = getBall();
+    if (lastColor == unwantedColor) {reject=true;}
+    else {reject=false;}
+  }
   return 0;
 }
