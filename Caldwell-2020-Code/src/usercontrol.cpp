@@ -4,7 +4,6 @@ void usercontrol(void) {
   float throttle;
   float strafe;
   float turn;
-  positiontrackingtask = task( positionTrack );
   while(1) {
         
     //Drivebase Code
@@ -37,8 +36,13 @@ void usercontrol(void) {
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
     } else if (con.ButtonR1.pressing()) { //Roll Everything In
-      RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-      RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+      if (!reject) {
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+      } else {
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+      }
     } else if (con.ButtonR2.pressing()) { //Roll Everything Out
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);

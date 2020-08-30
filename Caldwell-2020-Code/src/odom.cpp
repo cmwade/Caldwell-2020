@@ -1,6 +1,6 @@
 #include "vex.h"
 
-task positiontrackingtask;
+task positiontrackingtask = task(positionTrack);
 
 //Physical Distances on the Bot
 float rWidth = 5.935;
