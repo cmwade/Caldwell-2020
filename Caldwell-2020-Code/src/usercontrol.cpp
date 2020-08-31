@@ -46,12 +46,12 @@ void usercontrol(void) {
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
     } else if (con.ButtonR1.pressing()) { //Roll Everything In
-      if (!reject) {
-        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-      } else {
+      if (reject && method == AUTO) {
         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
         RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+      } else {
+         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
       }
     } else if (con.ButtonR2.pressing()) { //Roll Everything Out
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
