@@ -1,11 +1,18 @@
 #include "vex.h"
 
+#define AUTO 0
+#define MANUAL 1
+int method = AUTO;
+
+void toggleAutoSorter(void) {
+  if (method==AUTO) {method=MANUAL;}
+  else {method=AUTO;}
+}
+
 void usercontrol(void) {
-  float
   float throttle;
   float strafe;
   float turn;
-  char method = AUTO;
   while(1) {
         
     //Drivebase Code
@@ -35,11 +42,7 @@ void usercontrol(void) {
     
     //Switching Roller Control Methods
     
-    if (con.ButtonLeft.pressing()) {
-      while (con.ButtonLeft.pressing()) {}
-      if (method == AUTO) { method = MANUAL }
-      else { method == AUTO }
-    }  
+    con.ButtonLeft.pressed(toggleAutoSorter);
     
     //Rollers
     if (con.ButtonR1.pressing() and con.ButtonR2.pressing()) { //Roll Out Back
