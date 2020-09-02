@@ -1,0 +1,14 @@
+# Ignore build files #
+######################
+
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Ignore OS-generated files #
+#############################
+
+.DS_Store
