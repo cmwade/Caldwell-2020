@@ -1,9 +1,11 @@
 #include "vex.h"
 
 void usercontrol(void) {
+  float
   float throttle;
   float strafe;
   float turn;
+  char method = AUTO;
   while(1) {
         
     //Drivebase Code
@@ -30,18 +32,26 @@ void usercontrol(void) {
       IntakeR.stop(brakeType::hold);
       IntakeL.stop(brakeType::hold);
     }
-
+    
+    //Switching Roller Control Methods
+    
+    if (con.ButtonLeft.pressing()) {
+      while (con.ButtonLeft.pressing()) {}
+      if (method == AUTO) { method = MANUAL }
+      else { method == AUTO }
+    }  
+    
     //Rollers
     if (con.ButtonR1.pressing() and con.ButtonR2.pressing()) { //Roll Out Back
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
     } else if (con.ButtonR1.pressing()) { //Roll Everything In
-      if (!reject) {
-        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-      } else {
+      if (reject && method == AUTO) {
         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
         RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+      } else {
+         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
       }
     } else if (con.ButtonR2.pressing()) { //Roll Everything Out
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
