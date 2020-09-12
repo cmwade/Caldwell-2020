@@ -17,5 +17,6 @@ void Test( void ) {
 }
 
 void autonomous(void) {
+  task positiontrackingtask = task(positionTrack);
   Test(); //Results from Auton Selector Determine the Auto Chosen
 }
