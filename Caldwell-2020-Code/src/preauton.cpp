@@ -188,6 +188,16 @@ void pre_auton( void ) {
   side = selectSide();
   mode = selectMode();
 
-  if (alliance==RED) {unwantedColor=1;}
+  if (alliance==RED) {Brain.Screen.printAt(1, 20, "Alliance: Red");}
+  else if (alliance==BLUE) {Brain.Screen.printAt(1,20,"Alliance: Blue");}
+  else {Brain.Screen.printAt(1,20,"Alliance: Skills");}
+
+  if (side==LEFT) {Brain.Screen.printAt(1,40,"Side: Left");}
+  else {Brain.Screen.printAt(1,40,"Side: Right");}
+
+  if (mode==SIMPLE) {Brain.Screen.printAt(1,60,"Mode: Simple");}
+  else {Brain.Screen.printAt(1,60,"Mode: Complex");}
+
+  if (alliance==RED || alliance==SKILLS) {unwantedColor=1;}
   else if (alliance==BLUE) {unwantedColor=2;}
 }
