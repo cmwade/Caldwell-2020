@@ -19,6 +19,7 @@
 #include "odom.h"
 #include "vision-sensor.h"
 #include "sorter.h"
+#include "preauton.h"
 
 #define waitUntil(condition)                                                   \
   do {                                                                         \
