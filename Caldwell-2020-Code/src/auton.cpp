@@ -216,7 +216,6 @@ void cornerMiddleCenter() {
    * home row goal. This goes for
    * either color.
    */
-  //simultaneously(OPENWIDE);
   simultaneously(OPENWIDE);
   turnSlide(-12,50.2,0,true,90,10,999999,driveP+0.5);
   simultaneously(BALLTOHOOD);
