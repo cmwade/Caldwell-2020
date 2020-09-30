@@ -119,11 +119,11 @@ void simultaneously(int flag) {
   else if (polytasker_flag==NOTHING) {polytasker_flag = flag;}
 }
 
-/*********************
+/*********************\
  ***               ***
  **   A U T O N S   **
  ***               ***
- *********************/
+\*********************/
 
 void fullHomeRow() {
   /*
