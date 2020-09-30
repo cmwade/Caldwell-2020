@@ -29,19 +29,19 @@ void usercontrol(void) {
     //Intake and Roller Code
 
     //Intakes
-    con.ButtonL1.pressed(spinIntakes);
-    con.ButtonL1.released(stopIntakes);
-    con.ButtonL2.pressed(openIntakesWide);
+    con.ButtonR1.pressed(spinIntakes);
+    con.ButtonR1.released(stopIntakes);
+    con.ButtonR2.pressed(openIntakesWide);
     
     //Switching Roller Control Methods
     
     con.ButtonLeft.pressed(toggleAutoSorter);
     
     //Rollers
-    if (con.ButtonR1.pressing() && con.ButtonR2.pressing()) { //Roll Out Back
+    if (con.ButtonL1.pressing() && con.ButtonL2.pressing()) { //Roll Out Back
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-    } else if (con.ButtonR1.pressing()) { //Roll Everything In
+    } else if (con.ButtonL1.pressing()) { //Roll Everything In
       if (reject && method == AUTO) {
         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
         RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
@@ -49,7 +49,7 @@ void usercontrol(void) {
          RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
         RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
       }
-    } else if (con.ButtonR2.pressing()) { //Roll Everything Out
+    } else if (con.ButtonL2.pressing()) { //Roll Everything Out
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
     } else {
