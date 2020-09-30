@@ -20,6 +20,8 @@
 #include "vision-sensor.h"
 #include "sorter.h"
 #include "preauton.h"
+#include "rollers.h"
+#include "miscFunctions.h"
 
 #define waitUntil(condition)                                                   \
   do {                                                                         \

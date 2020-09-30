@@ -8,25 +8,26 @@ task ballsortertask = task(ballSort);
 
 bool reject = false;
 
-int unwantedColor;
+int unwantedColor=BLUE;
 
 int getBall() { //gets whether there is a ball in front of the sensor, and what color
   int largestRed = 0;
   int largestBlue = 0;
+  int minimumArea = 30000;
   int width,height,size;
   vs.takeSnapshot(RED_BALL);
   if (vs.largestObject.exists) {
     width = vs.largestObject.width;
     height = vs.largestObject.height;
     size = width*height;
-    if (size>600) {largestRed=width*height;}
+    if (size>minimumArea) {largestRed=width*height;}
   }
   vs.takeSnapshot(BLUE_BALL);
   if (vs.largestObject.exists) {
     width = vs.largestObject.width;
     height = vs.largestObject.height;
     size=width*height;
-    if (size>600) {largestBlue=width*height;}
+    if (size>minimumArea) {largestBlue=width*height;}
   }
   if (largestBlue>largestRed) {return BLUE;}
   else if (largestRed>largestBlue) {return RED;}
@@ -34,8 +35,10 @@ int getBall() { //gets whether there is a ball in front of the sensor, and what 
 }
 
 int ballSort() { //callback for the ball sorting task
+  int lastColor = unwantedColor;
   while(true) {
-    int lastColor = getBall();
+    int ball = getBall();
+    if (ball != NO_BALL) {lastColor = ball;}
     if (lastColor == unwantedColor) {reject=true;}
     else {reject=false;}
   }

@@ -87,6 +87,7 @@ void goalAlign( float voltage, float timeoutMsec) {
   while ( not( FANG.pressing() ) and Brain.timer(timeUnits::msec) < timeoutMsec) {
     setDriveVoltage( voltage, voltage, voltage, voltage);
   }
+  setDriveVoltage(0,0,0,0);
 }
 
 void driveHold( void ) {

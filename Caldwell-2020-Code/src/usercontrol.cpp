@@ -29,23 +29,16 @@ void usercontrol(void) {
     //Intake and Roller Code
 
     //Intakes
-    if (con.ButtonL1.pressing()) { //Intake In
-      IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
-      IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
-    } else if (con.ButtonL2.pressing()) { //Open Intakes
-      IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
-      IntakeL.spin(directionType::rev, 100, velocityUnits::pct);
-    } else {
-      IntakeR.stop(brakeType::hold);
-      IntakeL.stop(brakeType::hold);
-    }
+    con.ButtonL1.pressed(spinIntakes);
+    con.ButtonL1.released(stopIntakes);
+    con.ButtonL2.pressed(openIntakesWide);
     
     //Switching Roller Control Methods
     
     con.ButtonLeft.pressed(toggleAutoSorter);
     
     //Rollers
-    if (con.ButtonR1.pressing() and con.ButtonR2.pressing()) { //Roll Out Back
+    if (con.ButtonR1.pressing() && con.ButtonR2.pressing()) { //Roll Out Back
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
     } else if (con.ButtonR1.pressing()) { //Roll Everything In
