@@ -1,5 +1,6 @@
 #include "vex.h"
 
+/* AUTON SELECTOR VALUES */
 #define RED 0
 #define BLUE 1
 #define SKILLS 2
@@ -8,6 +9,7 @@
 #define SIMPLE 0
 #define COMPLEX 1
 
+/* MULTI/POLYTASKER FLAG VALUES */
 #define NOTHING 0
 #define UNFOLD 1
 #define OPENINTAKES 2
@@ -17,10 +19,11 @@
 #define EATBALL 6
 #define GOALALIGN 7
 
+/* FLAGS FOR MULTI/POLYTASKER */
 int multitasker_flag = NOTHING;
 int polytasker_flag = NOTHING;
 
-void Test( void ) {
+void Test( void ) { // A test auton.
   driveReset(0, 0, 0);
   turnSlide(0, 24, -90);
   turnSlide(24, 24, 180);
@@ -37,6 +40,12 @@ void Test( void ) {
 }
 
 int multitasker_callback() {
+  /*
+   * This is the callback for the Multitasker thread.
+   * It waits until the variable multitasker_flag is changed
+   * to a value, and then calls the function associated with that
+   * value and sets multitasker_flag back to NOTHING.
+   */
   while (true) {
     if (multitasker_flag==UNFOLD) {
       unfold();
@@ -66,6 +75,13 @@ int multitasker_callback() {
 }
 
 int polytasker_callback() {
+  /*
+   * This is the callback for the Polytasker thread.
+   * It pretty much does the same thing as the Multitasker
+   * thread, except it looks at the variable polytasker_flag
+   * instead. This is just so that we can have 2 functions
+   * running in the background instead of just 1.
+   */
   while (true) {
     if (polytasker_flag==UNFOLD) {
       unfold();
@@ -95,6 +111,10 @@ int polytasker_callback() {
 }
 
 void simultaneously(int flag) {
+  /*
+   * Assigns the flag to the Multitasker thread, or if the thread is busy,
+   * to the Polytasker thread.
+   */
   if (multitasker_flag==NOTHING) {multitasker_flag = flag;}
   else if (polytasker_flag==NOTHING) {polytasker_flag = flag;}
 }
@@ -246,10 +266,11 @@ void cornerMiddleCenter() {
 
 void autonomous(void) {
   Brain.resetTimer();
+  /* START THE TASKS */
   task positiontrackingtask = task(positionTrack);
   task multitasker = task(multitasker_callback);
   task polytasker = task(polytasker_callback);
-  driveReset();
+  driveReset(); //reset the drive position to (0,0)
   if (alliance==SKILLS) {fullHomeRow();}
   else {
     if (side==LEFT) {
