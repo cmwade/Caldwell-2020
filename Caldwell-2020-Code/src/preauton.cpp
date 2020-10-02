@@ -184,6 +184,7 @@ int selectSide( void ) {
 }
 
 void pre_auton( void ) {
+  task ballsortertask = task(ballSort);
   alliance = selectAlliance();
   side = selectSide();
   mode = selectMode();

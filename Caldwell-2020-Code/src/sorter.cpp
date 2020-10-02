@@ -4,11 +4,9 @@
 #define BLUE 1
 #define RED 2
 
-task ballsortertask = task(ballSort);
-
 bool reject = false;
 
-int unwantedColor=BLUE;
+int unwantedColor;
 
 int getBall() { //gets whether there is a ball in front of the sensor, and what color
   int largestRed = 0;
