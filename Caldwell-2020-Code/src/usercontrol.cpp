@@ -9,9 +9,9 @@ void toggleAutoSorter(void) {
   else {method=AUTO;}
 }
 
-double cubic(double input) {
+double radial(double input) {
   return \
-  (pow(input,3))/(100*fabs(input)); 
+  (100*sin(acos(input/100))-100)*((-input)/fabs(input));
 }
 
 void usercontrol(void) {
