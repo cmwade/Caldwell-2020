@@ -9,6 +9,11 @@ void toggleAutoSorter(void) {
   else {method=AUTO;}
 }
 
+double sinusoidal(double input) {
+  return \
+  (-50*cos((pi*input)/(100))+50)*(input/(fabs(input)));
+}
+
 void usercontrol(void) {
   float throttle;
   float strafe;
@@ -19,7 +24,7 @@ void usercontrol(void) {
 
     throttle = con.Axis3.value();
     strafe = con.Axis4.value();
-    turn = con.Axis1.value();
+    turn = sinusoidal(con.Axis1.value());
 
     LF.spin(directionType::fwd, (throttle+strafe+turn), velocityUnits::pct);
     LB.spin(directionType::fwd, (throttle-strafe+turn), velocityUnits::pct);
