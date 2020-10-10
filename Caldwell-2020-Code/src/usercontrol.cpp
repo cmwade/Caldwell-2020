@@ -49,6 +49,8 @@ void openIntakesUSR() {
 
 void stopOpeningIntakes() {
   intakesOpening = false;
+  IntakeL.stop(hold);
+  IntakeR.stop(hold);
 }
 
 void usercontrol(void) {
@@ -73,7 +75,7 @@ void usercontrol(void) {
     //Intakes
     con.ButtonR1.pressed(spinIntakes);
     con.ButtonR1.released(stopIntakes);
-    con.ButtonR2.pressed(openIntakesWide);
+    con.ButtonR2.pressed(openIntakesUSR);
     con.ButtonR2.released(stopOpeningIntakes);
     
     //Switching Roller Control Methods
