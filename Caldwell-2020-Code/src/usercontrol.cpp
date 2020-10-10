@@ -9,6 +9,50 @@ void toggleAutoSorter(void) {
   else {method=AUTO;}
 }
 
+bool intakesOpening = false;
+
+void openIntakesUSR() {
+  IntakeL.spin(directionType::rev,12,voltageUnits::volt);
+  IntakeR.spin(directionType::rev,12,voltageUnits::volt);
+  float gains[5] = {100,100,100,100,100};
+  float avgGain = (gains[0]+gains[1]+gains[2]+gains[3]+gains[4])/5;
+  float lGain;
+  float rGain;
+  float totalGain;
+  float lStart;
+  float rStart;
+  Brain.Screen.clearScreen();
+  intakesOpening = true;
+  while (avgGain > 5 && intakesOpening) {
+    lStart = IntakeL.rotation(rotationUnits::deg);
+    rStart = IntakeR.rotation(rotationUnits::deg);
+    task::sleep(25);
+    lGain = fabs(IntakeL.rotation(deg)-lStart);
+    rGain = fabs(IntakeR.rotation(deg)-rStart);
+    totalGain = (lGain+rGain)/2;
+    for (int n=0;n<4;n++) {
+      gains[n] = gains[n+1];
+    }
+    gains[4] = totalGain;
+    avgGain = (gains[0]+gains[1]+gains[2]+gains[3]+gains[4])/5;
+    task::sleep(15);
+    /*Brain.Screen.printAt(1, 20, "%f", gains[0]);
+    Brain.Screen.printAt(1, 40, "%f", gains[1]);
+    Brain.Screen.printAt(1, 60, "%f", gains[2]);
+    Brain.Screen.printAt(1, 80, "%f", gains[3]);
+    Brain.Screen.printAt(1, 100, "%f", gains[4]);
+    Brain.Screen.printAt(1,140,"%f",avgGain);*/
+  }
+  IntakeL.stop(hold);
+  IntakeR.stop(hold);
+}
+
+void stopOpeningIntakes() {
+  intakesOpening = false;
+  IntakeL.stop(hold);
+  IntakeR.stop(hold);
+}
+
 void usercontrol(void) {
   float throttle;
   float strafe;
@@ -31,7 +75,8 @@ void usercontrol(void) {
     //Intakes
     con.ButtonR1.pressed(spinIntakes);
     con.ButtonR1.released(stopIntakes);
-    con.ButtonR2.pressed(openIntakesWide);
+    con.ButtonR2.pressed(openIntakesUSR);
+    con.ButtonR2.released(stopOpeningIntakes);
     
     //Switching Roller Control Methods
     
