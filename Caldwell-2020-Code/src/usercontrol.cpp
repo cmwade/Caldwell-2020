@@ -9,6 +9,11 @@ void toggleAutoSorter(void) {
   else {method=AUTO;}
 }
 
+double cubic(double input) {
+  return \
+  (pow(input,3))/(100*fabs(input));
+}
+
 bool intakesOpening = false;
 
 void openIntakesUSR() {
@@ -63,7 +68,7 @@ void usercontrol(void) {
 
     throttle = con.Axis3.value();
     strafe = con.Axis4.value();
-    turn = con.Axis1.value();
+    turn = cubic(con.Axis1.value());
 
     LF.spin(directionType::fwd, (throttle+strafe+turn), velocityUnits::pct);
     LB.spin(directionType::fwd, (throttle-strafe+turn), velocityUnits::pct);
