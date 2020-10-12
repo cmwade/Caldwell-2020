@@ -10,7 +10,8 @@ void toggleAutoSorter(void) {
 }
 
 double cubic(double input) {
-  return (pow(input,3))/(100*fabs(input));
+  if (input != 0) {return (pow(input,3))/(100*fabs(input));}
+  else {return 0;}
 }
 
 bool intakesOpening = false;
