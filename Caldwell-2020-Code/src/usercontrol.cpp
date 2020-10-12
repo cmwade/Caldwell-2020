@@ -10,8 +10,11 @@ void toggleAutoSorter(void) {
 }
 
 double cubic(double input) {
-  return \
-  (pow(input,3))/(100*fabs(input));
+  if ( input == 0) {
+    return 0;
+  } else {
+    return round((pow(input,3))/(100*fabs(input)));
+  }
 }
 
 bool intakesOpening = false;
@@ -56,7 +59,7 @@ void stopOpeningIntakes() {
   intakesOpening = false;
   IntakeL.stop(hold);
   IntakeR.stop(hold);
-}
+} 
 
 void usercontrol(void) {
   float throttle;
@@ -78,33 +81,28 @@ void usercontrol(void) {
     //Intake and Roller Code
 
     //Intakes
-    con.ButtonR1.pressed(spinIntakes);
-    con.ButtonR1.released(stopIntakes);
-    con.ButtonR2.pressed(openIntakesUSR);
-    con.ButtonR2.released(stopOpeningIntakes);
+    con.ButtonL1.pressed(spinIntakes);
+    con.ButtonL1.released(stopIntakes);
+    con.ButtonL2.pressed(openIntakesUSR);
+    con.ButtonL2.released(stopOpeningIntakes);
     
     //Switching Roller Control Methods
     
     con.ButtonLeft.pressed(toggleAutoSorter);
     
     //Rollers
-    if (con.ButtonL1.pressing() && con.ButtonL2.pressing()) { //Roll Out Back
+    if (con.ButtonR1.pressing() && con.ButtonR2.pressing()) {
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-    } else if (con.ButtonL1.pressing()) { //Roll Everything In
-      if (reject && method == AUTO) {
-        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-      } else {
-         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-      }
-    } else if (con.ButtonL2.pressing()) { //Roll Everything Out
+    } else if (con.ButtonR1.pressing()) {
+      RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+      RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+    } else if (con.ButtonR2.pressing()) {
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
     } else {
-      RollerMain.stop(brakeType::coast);
-      RollerBack.stop(brakeType::coast);
+      RollerMain.stop();
+      RollerBack.stop();
     }
   }
 }
