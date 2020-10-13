@@ -98,8 +98,13 @@ void usercontrol(void) {
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
     } else {
-      RollerMain.stop();
-      RollerBack.stop();
+      if ( HoodPot.value(percentUnits::pct) < 20 ) {
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+      } else {
+        RollerMain.stop(brakeType::hold);
+        RollerBack.stop(brakeType::hold);
+      }
     }
   }
 }

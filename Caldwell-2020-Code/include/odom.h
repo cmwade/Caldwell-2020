@@ -63,7 +63,7 @@ void setDriveVelocity( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpee
 
 void setDriveVoltage( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpeed); 
 
-void goalAlign( float voltage, float timeoutMsec = 999999 );
+void goalAlign( float timeMsec = 250, float voltage = 5);
 
 void driveHold( void );
 
@@ -75,6 +75,6 @@ int positionTrack();
 
 void driveReset ( float X = 0, float Y = 0, float OrientationDeg = 0 );
 
-void turnSlide( float endX, float endY, float endRotationDeg, bool holdAtTarget = true, float maxDriveValue = driveMax, float maxTurnValue = turnMax, float timeoutMsec = 999999, float drivePValue = driveP, float turnPValue = turnP, float driveDValue = driveD, float turnDValue = turnD, float driveErrorMargin = errorMarginBase, float turnErrorMarginDeg = errorMarginTurnDeg );
+void turnSlide( float endX, float endY, float endRotationDeg, float maxDriveValue = driveMax, float maxTurnValue = turnMax, float timeoutMsec = 999999, float drivePValue = driveP, float turnPValue = turnP, float driveDValue = driveD, float turnDValue = turnD, float driveErrorMargin = errorMarginBase, float turnErrorMarginDeg = errorMarginTurnDeg );
 
 void calibratePositionTrackers( void );

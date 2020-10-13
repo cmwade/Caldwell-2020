@@ -23,7 +23,7 @@ motor RollerMain = motor(PORT10, ratio18_1, true);
 encoder EncoderL = encoder(Brain.ThreeWirePort.C);
 encoder EncoderR = encoder(Brain.ThreeWirePort.E);
 encoder EncoderB = encoder(Brain.ThreeWirePort.G);
-limit FANG = limit(Brain.ThreeWirePort.B); //FANG = Field Autonomous Navigation Gizmo
+limit BallDetector = limit(Brain.ThreeWirePort.B); //Detects Balls Recently Descored
 pot HoodPot = pot(Brain.ThreeWirePort.A);
 
 controller con = controller(primary);

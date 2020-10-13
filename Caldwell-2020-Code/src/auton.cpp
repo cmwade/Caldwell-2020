@@ -22,6 +22,7 @@
 /* FLAGS FOR MULTI/POLYTASKER */
 int multitasker_flag = NOTHING;
 int polytasker_flag = NOTHING;
+int supertasker_flag = NOTHING;
 
 void Test( void ) { // A test auton.
   driveReset(0, 0, 0);
@@ -60,13 +61,13 @@ int multitasker_callback() {
       BalltoHood();
       multitasker_flag = NOTHING;
     } else if (multitasker_flag==BTHNOINTAKES) {
-      BalltoHood(85,999999,false);
+      BalltoHood(20,999999,false);
       multitasker_flag=NOTHING;
     } else if (multitasker_flag==EATBALL) {
       eatBall();
       multitasker_flag=NOTHING;
     } else if (multitasker_flag==GOALALIGN) {
-      goalAlign(10);
+      goalAlign();
       multitasker_flag=NOTHING;
     }
     task::sleep(25);
@@ -96,14 +97,46 @@ int polytasker_callback() {
       BalltoHood();
       polytasker_flag = NOTHING;
     } else if (polytasker_flag==BTHNOINTAKES) {
-      BalltoHood(85,999999,false);
+      BalltoHood(20,999999,false);
       polytasker_flag=NOTHING;
     } else if (polytasker_flag==EATBALL) {
       eatBall();
       polytasker_flag=NOTHING;
     } else if (polytasker_flag==GOALALIGN) {
-      goalAlign(10);
+      goalAlign();
       polytasker_flag=NOTHING;
+    }
+    task::sleep(25);
+  }
+  return 0;
+}
+
+int supertasker_callback() {
+  /*
+   * Another Callback Thread
+   */
+  while (true) {
+    if (multitasker_flag==UNFOLD) {
+      unfold();
+      multitasker_flag = NOTHING;
+    } else if (multitasker_flag==OPENINTAKES) {
+      openIntakes();
+      multitasker_flag = NOTHING;
+    } else if (multitasker_flag==OPENWIDE) {
+      openIntakesWide();
+      multitasker_flag = NOTHING;
+    } else if (multitasker_flag==BALLTOHOOD) {
+      BalltoHood();
+      multitasker_flag = NOTHING;
+    } else if (multitasker_flag==BTHNOINTAKES) {
+      BalltoHood(20,999999,false);
+      multitasker_flag=NOTHING;
+    } else if (multitasker_flag==EATBALL) {
+      eatBall();
+      multitasker_flag=NOTHING;
+    } else if (multitasker_flag==GOALALIGN) {
+      goalAlign();
+      multitasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -113,10 +146,11 @@ int polytasker_callback() {
 void simultaneously(int flag) {
   /*
    * Assigns the flag to the Multitasker thread, or if the thread is busy,
-   * to the Polytasker thread.
+   * to the Polytasker thread, or if the thread is busy, the Supertasker thread.
    */
   if (multitasker_flag==NOTHING) {multitasker_flag = flag;}
   else if (polytasker_flag==NOTHING) {polytasker_flag = flag;}
+  else if (supertasker_flag==NOTHING) {supertasker_flag = flag;}
 }
 
 /*********************\
@@ -133,26 +167,30 @@ void fullHomeRow() {
    * home row goal. This goes for
    * either color.
    */
-  simultaneously(OPENWIDE);
-  turnSlide(24,14,135);
+  driveReset(96, 9, 0);
+  simultaneously(UNFOLD);
+  turnSlide(108,36,135, 70, 40, 999999, 5, 1, 55, turnD, 3, 3);
   simultaneously(BTHNOINTAKES);
-  turnSlide(26,12,135);
   simultaneously(EATBALL);
-  goalAlign(5);
+  turnSlide(128,16,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  stopIntakes();
+  goalAlign();
   scoreBall();
-  task::sleep(250);
   simultaneously(BALLTOHOOD);
-  turnSlide(26,12,135);
-  turnSlide(-16,6.8,216);
-  scoreBall();
+  turnSlide(120,24,135, 70, 40, 999999, 5, 1, 55, turnD, 3, 3);
+  turnSlide(72, 24, 180);
   simultaneously(OPENWIDE);
-  turnSlide(-16,20,216,true,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
-  turnSlide(-74.4,4,220);
+  goalAlign(500);
+  scoreBall();
+  turnSlide(72, 40, 180, 80, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
+  turnSlide(40, 40, -135);
+  simultaneously(EATBALL);
+  turnSlide(16, 16, -135);
   BalltoHood();
-  goalAlign(5);
+  goalAlign();
   scoreBall();
   simultaneously(OPENWIDE);
-  turnSlide(-48,14,220);
+  turnSlide(24, 24, -135);
 }
 
 void cornerMiddleR() {
@@ -172,10 +210,10 @@ void cornerMiddleR() {
   scoreBall();
   simultaneously(BALLTOHOOD);
   turnSlide(26,12,135);
-  turnSlide(-16,6.8,216,true,driveMax,turnMax,8000);
+  turnSlide(-16,6.8,216,driveMax,turnMax,8000);
   scoreBall();
   simultaneously(OPENINTAKES);
-  turnSlide(-16,20,216,true,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
+  turnSlide(-16,20,216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
   eatBall();  
 }
 
@@ -197,10 +235,10 @@ void cornerMiddleRHitball() {
   scoreBall();
   simultaneously(BALLTOHOOD);
   turnSlide(26,12,135);
-  turnSlide(-16,6.8,216,true,driveMax,turnMax,12000);
+  turnSlide(-16,6.8,216,driveMax,turnMax,12000);
   scoreBall();
   simultaneously(OPENINTAKES);
-  turnSlide(-16,20,216,true,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
+  turnSlide(-16,20,216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
   eatBall(); 
 }
 
@@ -221,10 +259,10 @@ void cornerMiddleL() {
   scoreBall();
   simultaneously(BALLTOHOOD);
   turnSlide(-26,12,-135);
-  turnSlide(16,6.8,-216,true,driveMax,turnMax,8000);
+  turnSlide(16,6.8,-216,driveMax,turnMax,8000);
   scoreBall();
   simultaneously(OPENINTAKES);
-  turnSlide(16,20,-216,true,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
+  turnSlide(16,20,-216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
   eatBall(); 
 }
 
@@ -237,17 +275,17 @@ void cornerMiddleCenter() {
    * either color.
    */
   simultaneously(OPENWIDE);
-  turnSlide(-12,50.2,0,true,90,10,999999,driveP+0.5);
+  turnSlide(-12,50.2,0,90,10,999999,driveP+0.5);
   simultaneously(BALLTOHOOD);
   task::sleep(250);
-  turnSlide(16,6.8,-216,true,driveMax,turnMax,5000);
+  turnSlide(16,6.8,-216,driveMax,turnMax,5000);
   simultaneously(EATBALL);
   simultaneously(GOALALIGN);
   scoreBall();
   simultaneously(OPENWIDE);
-  turnSlide(16,20,216,true,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase+5,errorMarginTurnDeg+5);
+  turnSlide(16,20,216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase+5,errorMarginTurnDeg+5);
   simultaneously(BTHNOINTAKES);
-  turnSlide(-24,14,-135,true,driveMax,turnMax,999999,driveP+0.5);
+  turnSlide(-24,14,-135,driveMax,turnMax,999999,driveP+0.5);
   simultaneously(EATBALL);
   turnSlide(-26,12,-135);
   IntakeL.spin(fwd,20,pct);
@@ -256,12 +294,12 @@ void cornerMiddleCenter() {
   goalAlign(10);
   scoreBall();
   simultaneously(BTHNOINTAKES);
-  turnSlide(-20,17,-135,true,driveMax,turnMax,999990,driveP,turnP,driveD,turnD,errorMarginBase+5,errorMarginTurnDeg+5);
+  turnSlide(-20,17,-135,driveMax,turnMax,999990,driveP,turnP,driveD,turnD,errorMarginBase+5,errorMarginTurnDeg+5);
   simultaneously(OPENWIDE);
   turnSlide(12.3,53.6,38.3);
   simultaneously(GOALALIGN);
   scoreBall();
-  turnSlide(-26,12,38.3,true,100,0);
+  turnSlide(-26,12,38.3,100,0);
 }
 
 void autonomous(void) {
@@ -270,7 +308,7 @@ void autonomous(void) {
   task positiontrackingtask = task(positionTrack);
   task multitasker = task(multitasker_callback);
   task polytasker = task(polytasker_callback);
-  driveReset(); //reset the drive position to (0,0)
+  task supertasker = task(supertasker_callback);
   if (alliance==SKILLS) {fullHomeRow();}
   else {
     if (side==LEFT) {

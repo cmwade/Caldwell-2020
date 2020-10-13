@@ -1,7 +1,7 @@
 #include "vex.h"
 
 void BalltoHood ( float potValuePct, float timeoutMsec, bool intakes ) {
-  while ( HoodPot.value(percentUnits::pct) > potValuePct && Brain.timer(timeUnits::msec) < timeoutMsec) {
+  while ( HoodPot.value(percentUnits::pct) < potValuePct && Brain.timer(timeUnits::msec) < timeoutMsec) {
     if (intakes) {
       IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
       IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
@@ -44,11 +44,11 @@ void BallReject(float timeoutMsec) {
 }
 
 void scoreBall(float potValuePct, float timeoutMsec) {
-  BalltoHood(70,999999,false);
-  while ( HoodPot.value(percentUnits::pct) < potValuePct && Brain.timer(timeUnits::msec) < timeoutMsec) {
-    RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-    RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-  }
+  BalltoHood(20,999999,false);
+  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+  RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+  task::sleep(200);
   RollerMain.stop();
+  task::sleep(400);
   RollerBack.stop();
 }
