@@ -47,8 +47,7 @@ void scoreBall(float potValuePct, float timeoutMsec) {
   BalltoHood(potValuePct,999999,false);
   RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
   RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-  task::sleep(200);
+  task::sleep(800);
   RollerMain.stop();
-  task::sleep(600);
   RollerBack.stop();
 }

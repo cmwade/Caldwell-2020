@@ -194,17 +194,21 @@ void fullHomeRow() {
   turnSlide(72, 24, 180);
   goalAlign(600, 8);
   simultaneously(SCOREBALL);
-  goalAlign(900, 8);
+  stopIntakes();
+  goalAlign(900);
   turnSlide(72, 40, 180, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
-  simultaneously(BALLTOHOOD);
+  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+  RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
   turnSlide(40, 40, -135, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
-  turnSlide(22, 22, -135);
+  simultaneously(OPENWIDE);
+  turnSlide(22, 22, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
   turnSlide(18, 18, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 4, 4);
-  goalAlign(300);
+  goalAlign(600);
   BalltoHood();
   simultaneously(SCOREBALL);
   goalAlign(600);
+  Brain.Screen.printAt(1, 160, "%c%", Brain.timer(timeUnits::msec));
   turnSlide(24, 24, -135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
 }
 
