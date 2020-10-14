@@ -18,7 +18,7 @@ extern motor RollerBack;
 extern encoder EncoderL;
 extern encoder EncoderR;
 extern encoder EncoderB;
-extern limit FANG;
+extern limit BallDetector;
 extern pot HoodPot;
 
 extern controller con;

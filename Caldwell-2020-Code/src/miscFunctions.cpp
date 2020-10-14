@@ -67,3 +67,26 @@ void eatBall() {
   IntakeL.stop();
   IntakeR.stop();
 }
+
+void descoreBall( int numberOfBalls ) {
+  int n = 0;
+  while(n < numberOfBalls) {
+    IntakeL.stop();
+    IntakeR.stop();
+    RollerMain.stop();
+    while(BallDetector.pressing()){
+      IntakeL.spin(directionType::fwd,100,velocityUnits::pct);
+      IntakeR.spin(directionType::fwd,100,velocityUnits::pct);
+      RollerMain.spin(directionType::fwd,100,velocityUnits::pct);
+    }
+    while(not(BallDetector.pressing())){
+      IntakeL.spin(directionType::fwd,100,velocityUnits::pct);
+      IntakeR.spin(directionType::fwd,100,velocityUnits::pct);
+      RollerMain.spin(directionType::fwd,100,velocityUnits::pct);
+    }
+    IntakeL.stop();
+    IntakeR.stop();
+    RollerMain.stop();
+    n+=1;
+  }
+}

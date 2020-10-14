@@ -203,10 +203,12 @@ void fullHomeRow() {
   simultaneously(OPENWIDE);
   turnSlide(22, 22, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
-  turnSlide(18, 18, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 4, 4);
+  simultaneously(EATBALL);
+  BalltoHood();
   goalAlign(600);
   BalltoHood();
   simultaneously(SCOREBALL);
+  simultaneously(OPENWIDE);
   goalAlign(600);
   Brain.Screen.printAt(1, 160, "%c%", Brain.timer(timeUnits::msec));
   turnSlide(24, 24, -135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);

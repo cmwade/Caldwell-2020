@@ -9,3 +9,5 @@ void stopIntakes();
 void unfold();
 
 void eatBall();
+
+void descoreBall(int numberOfBalls = 1);
