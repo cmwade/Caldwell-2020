@@ -18,6 +18,7 @@
 #define BTHNOINTAKES 5
 #define EATBALL 6
 #define GOALALIGN 7
+#define SCOREBALL 8
 
 /* FLAGS FOR MULTI/POLYTASKER */
 int multitasker_flag = NOTHING;
@@ -69,6 +70,9 @@ int multitasker_callback() {
     } else if (multitasker_flag==GOALALIGN) {
       goalAlign();
       multitasker_flag=NOTHING;
+    } else if (multitasker_flag==SCOREBALL) {
+      scoreBall();
+      multitasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -105,6 +109,9 @@ int polytasker_callback() {
     } else if (polytasker_flag==GOALALIGN) {
       goalAlign();
       polytasker_flag=NOTHING;
+    } else if (polytasker_flag==SCOREBALL) {
+      scoreBall();
+      polytasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -116,27 +123,30 @@ int supertasker_callback() {
    * Another Callback Thread
    */
   while (true) {
-    if (multitasker_flag==UNFOLD) {
+    if (supertasker_flag==UNFOLD) {
       unfold();
-      multitasker_flag = NOTHING;
-    } else if (multitasker_flag==OPENINTAKES) {
+      supertasker_flag = NOTHING;
+    } else if (supertasker_flag==OPENINTAKES) {
       openIntakes();
-      multitasker_flag = NOTHING;
-    } else if (multitasker_flag==OPENWIDE) {
+      supertasker_flag = NOTHING;
+    } else if (supertasker_flag==OPENWIDE) {
       openIntakesWide();
-      multitasker_flag = NOTHING;
-    } else if (multitasker_flag==BALLTOHOOD) {
+      supertasker_flag = NOTHING;
+    } else if (supertasker_flag==BALLTOHOOD) {
       BalltoHood();
-      multitasker_flag = NOTHING;
-    } else if (multitasker_flag==BTHNOINTAKES) {
+      supertasker_flag = NOTHING;
+    } else if (supertasker_flag==BTHNOINTAKES) {
       BalltoHood(20,999999,false);
-      multitasker_flag=NOTHING;
-    } else if (multitasker_flag==EATBALL) {
+      supertasker_flag=NOTHING;
+    } else if (supertasker_flag==EATBALL) {
       eatBall();
-      multitasker_flag=NOTHING;
-    } else if (multitasker_flag==GOALALIGN) {
+      supertasker_flag=NOTHING;
+    } else if (supertasker_flag==GOALALIGN) {
       goalAlign();
-      multitasker_flag=NOTHING;
+      supertasker_flag=NOTHING;
+    } else if (supertasker_flag==SCOREBALL) {
+      scoreBall();
+      supertasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -169,28 +179,33 @@ void fullHomeRow() {
    */
   driveReset(96, 9, 0);
   simultaneously(UNFOLD);
-  turnSlide(108,36,135, 70, 40, 999999, 5, 1, 55, turnD, 3, 3);
+  turnSlide(108,36,135, 80, 40, 999999, 5, 1, 100, turnD, 3, 3);
   simultaneously(BTHNOINTAKES);
+  turnSlide(122,22,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
   simultaneously(EATBALL);
-  turnSlide(128,16,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  simultaneously(OPENWIDE);
+  goalAlign(600, 8);
   stopIntakes();
-  goalAlign();
-  scoreBall();
+  turnSlide(120,24,135, 90, 40, 999999, 5, 1, 150, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
-  turnSlide(120,24,135, 70, 40, 999999, 5, 1, 55, turnD, 3, 3);
+  turnSlide(84, 24, 180, 90, 40, 999999, driveP, turnP, 150, turnD, 3, 3);
   turnSlide(72, 24, 180);
-  simultaneously(OPENWIDE);
-  goalAlign(500);
-  scoreBall();
-  turnSlide(72, 40, 180, 80, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
-  turnSlide(40, 40, -135);
-  simultaneously(EATBALL);
-  turnSlide(16, 16, -135);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(900, 8);
+  turnSlide(72, 40, 180, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
+  simultaneously(BALLTOHOOD);
+  turnSlide(40, 40, -135, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
+  turnSlide(22, 22, -135);
+  simultaneously(BALLTOHOOD);
+  turnSlide(18, 18, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 4, 4);
+  goalAlign(300);
   BalltoHood();
-  goalAlign();
-  scoreBall();
-  simultaneously(OPENWIDE);
-  turnSlide(24, 24, -135);
+  simultaneously(SCOREBALL);
+  goalAlign(600);
+  turnSlide(24, 24, -135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
 }
 
 void cornerMiddleR() {

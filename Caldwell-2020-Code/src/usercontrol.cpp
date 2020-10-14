@@ -62,6 +62,10 @@ void usercontrol(void) {
   float throttle;
   float strafe;
   float turn;
+  LF.setBrake(brakeType::coast);
+  LB.setBrake(brakeType::coast);
+  RB.setBrake(brakeType::coast);
+  RF.setBrake(brakeType::coast);
   while(1) {
         
     //Drivebase Code

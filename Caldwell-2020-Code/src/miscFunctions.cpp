@@ -63,4 +63,7 @@ void unfold() {
 void eatBall() {
   IntakeL.spin(directionType::fwd,100,velocityUnits::pct);
   IntakeR.spin(directionType::fwd,100,velocityUnits::pct);
+  task::sleep(500);
+  IntakeL.stop();
+  IntakeR.stop();
 }
