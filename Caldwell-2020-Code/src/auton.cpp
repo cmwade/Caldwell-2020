@@ -19,6 +19,7 @@
 #define EATBALL 6
 #define GOALALIGN 7
 #define SCOREBALL 8
+#define DESCOREBALL 9
 
 /* FLAGS FOR MULTI/POLYTASKER */
 int multitasker_flag = NOTHING;
@@ -73,6 +74,9 @@ int multitasker_callback() {
     } else if (multitasker_flag==SCOREBALL) {
       scoreBall();
       multitasker_flag=NOTHING;
+    } else if (multitasker_flag==DESCOREBALL) {
+      descoreBall();
+      multitasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -112,6 +116,9 @@ int polytasker_callback() {
     } else if (polytasker_flag==SCOREBALL) {
       scoreBall();
       polytasker_flag=NOTHING;
+    } else if (polytasker_flag==DESCOREBALL) {
+      descoreBall();
+      polytasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -146,6 +153,9 @@ int supertasker_callback() {
       supertasker_flag=NOTHING;
     } else if (supertasker_flag==SCOREBALL) {
       scoreBall();
+      supertasker_flag=NOTHING;
+    } else if (supertasker_flag==DESCOREBALL) {
+      descoreBall();
       supertasker_flag=NOTHING;
     }
     task::sleep(25);
@@ -182,34 +192,30 @@ void fullHomeRow() {
   turnSlide(108,36,135, 80, 40, 999999, 5, 1, 100, turnD, 3, 3);
   simultaneously(BTHNOINTAKES);
   turnSlide(122,22,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
-  simultaneously(EATBALL);
+  simultaneously(DESCOREBALL);
   goalAlign(600, 8);
   simultaneously(SCOREBALL);
   simultaneously(OPENWIDE);
   goalAlign(600, 8);
-  stopIntakes();
   turnSlide(120,24,135, 90, 40, 999999, 5, 1, 150, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
-  turnSlide(84, 24, 180, 90, 40, 999999, driveP, turnP, 150, turnD, 3, 3);
-  turnSlide(72, 24, 180);
+  turnSlide(88, 24, 180, 90, 40, 999999, driveP, turnP, 150, turnD, 3, 3);
+  turnSlide(72, 24, 182);
+  simultaneously(DESCOREBALL);
+  goalAlign(800, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(1000, 3);
+  simultaneously(OPENWIDE);
+  turnSlide(72, 40, 180, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
+  simultaneously(BALLTOHOOD);
+  turnSlide(40, 40, -135, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
+  turnSlide(22, 22, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
+  simultaneously(EATBALL);
+  spinIntakes();
   goalAlign(600, 8);
   simultaneously(SCOREBALL);
-  stopIntakes();
-  goalAlign(900);
-  turnSlide(72, 40, 180, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
-  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-  RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-  turnSlide(40, 40, -135, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
+  goalAlign(600, 8);
   simultaneously(OPENWIDE);
-  turnSlide(22, 22, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
-  simultaneously(BALLTOHOOD);
-  simultaneously(EATBALL);
-  BalltoHood();
-  goalAlign(600);
-  BalltoHood();
-  simultaneously(SCOREBALL);
-  simultaneously(OPENWIDE);
-  goalAlign(600);
   Brain.Screen.printAt(1, 160, "%c%", Brain.timer(timeUnits::msec));
   turnSlide(24, 24, -135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
 }

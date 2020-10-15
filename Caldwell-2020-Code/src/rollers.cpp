@@ -45,9 +45,10 @@ void BallReject(float timeoutMsec) {
 
 void scoreBall(float potValuePct, float timeoutMsec) {
   BalltoHood(potValuePct,999999,false);
+  while (HoodPot.value(percentUnits::pct) > 20) {
   RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
   RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-  task::sleep(800);
+  }
   RollerMain.stop();
   RollerBack.stop();
 }
