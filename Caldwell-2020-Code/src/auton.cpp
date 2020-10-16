@@ -239,7 +239,7 @@ void rightHomeRow() {
   goalAlign(800, 8);
   simultaneously(OPENWIDE);
   Brain.Screen.printAt(1, 160, "%c%", Brain.timer(timeUnits::msec));
-  turnSlide(36, 36, -135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
+  turnSlide(36, 36, -135, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
 }
 
 void leftHomeRow() {
@@ -281,7 +281,7 @@ void leftHomeRow() {
   goalAlign(800, 8);
   simultaneously(OPENWIDE);
   Brain.Screen.printAt(1, 160, "%c%", Brain.timer(timeUnits::msec));
-  turnSlide(108, 36, 135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
+  turnSlide(108, 36, 135, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
 }
 
 void rightSimple() {
@@ -291,49 +291,95 @@ void rightSimple() {
    * to the right of the center
    * home row goal. This goes for
    * either color.
+   * 
+   * Hits the ball on the line 
+   * and cycles the corner goal.
    */
   driveReset(96, 9, 0);
   simultaneously(UNFOLD);
   turnSlide(108,36,0, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
   simultaneously(BTHNOINTAKES);
-  simultaneously(EATBALL);
   task::sleep(500);
-  turnSlide(108, 60, 0);
+  simultaneously(EATBALL);
+  task::sleep(250);
+  turnSlide(108, 62, 0);
   turnSlide(108,36,135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
   turnSlide(122,22,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
-  simultaneously(DESCOREBALL);
+  simultaneously(DESCORETHREE);
   goalAlign(600, 8);
   simultaneously(SCOREBALL);
-  goalAlign(600, 8);
+  goalAlign(1000, 3);
+  scoreBall();
+  scoreBall();
   simultaneously(OPENWIDE);
+  turnSlide(108, 36, 135, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
 }
 
-void cornerMiddleRHitball() {
+void rightComplex() {
   /*
    * Start position:
    * straddling the tile division
    * to the right of the center
    * home row goal. This goes for
    * either color.
+   *
+   * Cycles the corner and middle goals.
    */
+  driveReset(96, 9, 0);
+  simultaneously(UNFOLD);
+  turnSlide(108,36,135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
+  turnSlide(122,22,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  simultaneously(DESCORETHREE);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(1000, 3);
+  scoreBall();
+  scoreBall();
   simultaneously(OPENWIDE);
-  turnSlide(13.5,50.2,30);
-  simultaneously(BTHNOINTAKES);
-  turnSlide(24,14,135);
-  turnSlide(26,12,135);
-  simultaneously(EATBALL);
-  goalAlign(5);
+  turnSlide(120,28,135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3);
+  simultaneously(SCOREBALL);
+  turnSlide(88, 28, 90, 90, 40, 999999, 10, turnP, 150, turnD, 3, 3);
+  turnSlide(72, 28, 180, 60, 40, 999999, driveP, turnP, driveD, turnD, 2, 2);
+  simultaneously(OPENWIDE);
+  goalAlign(800, 6);
+  simultaneously(DESCORETWO);
   scoreBall();
-  simultaneously(BALLTOHOOD);
-  turnSlide(26,12,135);
-  turnSlide(-16,6.8,216,driveMax,turnMax,12000);
-  scoreBall();
-  simultaneously(OPENINTAKES);
-  turnSlide(-16,20,216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
-  eatBall(); 
+  turnSlide(72, 36, 180, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
 }
 
-void cornerMiddleL() {
+void leftSimple() {
+  /*
+   * Start position:
+   * straddling the tile division
+   * to the left of the center
+   * home row goal. This goes for
+   * either color.
+   *
+   *
+   */
+  driveReset(48, 9, 0);
+  simultaneously(UNFOLD);
+  turnSlide(36,36,-135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
+  turnSlide(22,22,-135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  simultaneously(DESCORETHREE);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(1000, 3);
+  scoreBall();
+  scoreBall();
+  simultaneously(OPENWIDE);
+  turnSlide(24,24,-135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3);
+  turnSlide(24,24,0, 90, 80, 999999, driveP, 1, 150, turnD, 3, 3);
+  simultaneously(EATBALL);
+  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+  RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+  turnSlide(36, 61, 0);
+  turnSlide(48, 61, 0);
+  turnSlide(60, 61, 0, 100, 10, 14600, 6);
+  turnSlide(40, 40, 0, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
+}
+
+void leftComplex() {
   /*
    * Start position:
    * straddling the tile division
@@ -341,56 +387,31 @@ void cornerMiddleL() {
    * home row goal. This goes for
    * either color.
    */
-  simultaneously(OPENWIDE);
-  turnSlide(-24,14,-135);
+  driveReset(48, 9, 0);
+  simultaneously(UNFOLD);
+  turnSlide(36,36,-135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
   simultaneously(BTHNOINTAKES);
-  turnSlide(-26,12,-135);
-  simultaneously(EATBALL);
-  goalAlign(5);
-  scoreBall();
+  turnSlide(22,22,-135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  simultaneously(DESCOREBALL);
+  stopIntakes();
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(600, 8);
+  simultaneously(OPENWIDE);
+  turnSlide(24,28,-135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
-  turnSlide(-26,12,-135);
-  turnSlide(16,6.8,-216,driveMax,turnMax,8000);
-  scoreBall();
-  simultaneously(OPENINTAKES);
-  turnSlide(16,20,-216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
-  eatBall(); 
-}
-
-void cornerMiddleCenter() {
-  /*
-   * Start position:
-   * straddling the tile division
-   * to the left of the center
-   * home row goal. This goes for
-   * either color.
-   */
+  turnSlide(54, 28, 180, 90, 40, 999999, 10, turnP, 150, turnD, 3, 3);
+  turnSlide(72, 28, 180);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(1000, 3);
   simultaneously(OPENWIDE);
-  turnSlide(-12,50.2,0,90,10,999999,driveP+0.5);
-  simultaneously(BALLTOHOOD);
-  task::sleep(250);
-  turnSlide(16,6.8,-216,driveMax,turnMax,5000);
+  turnSlide(72, 36, 180, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
+  turnSlide(46, 36, 0, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
   simultaneously(EATBALL);
-  simultaneously(GOALALIGN);
-  scoreBall();
-  simultaneously(OPENWIDE);
-  turnSlide(16,20,216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase+5,errorMarginTurnDeg+5);
-  simultaneously(BTHNOINTAKES);
-  turnSlide(-24,14,-135,driveMax,turnMax,999999,driveP+0.5);
-  simultaneously(EATBALL);
-  turnSlide(-26,12,-135);
-  IntakeL.spin(fwd,20,pct);
-  IntakeR.spin(fwd,20,pct);
-  simultaneously(BTHNOINTAKES);
-  goalAlign(10);
-  scoreBall();
-  simultaneously(BTHNOINTAKES);
-  turnSlide(-20,17,-135,driveMax,turnMax,999990,driveP,turnP,driveD,turnD,errorMarginBase+5,errorMarginTurnDeg+5);
-  simultaneously(OPENWIDE);
-  turnSlide(12.3,53.6,38.3);
-  simultaneously(GOALALIGN);
-  scoreBall();
-  turnSlide(-26,12,38.3,100,0);
+  turnSlide(48, 61, 0);
+  turnSlide(60, 61, 0, 100, 10, 14600, 6);
+  turnSlide(40, 40, 0, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
 }
 
 void autonomous(void) {
@@ -403,12 +424,12 @@ void autonomous(void) {
   if (alliance==SKILLS) {}
   else {
     if (side==LEFT) {
-      if (mode==SIMPLE) {cornerMiddleL();}
-      else if (mode==COMPLEX) {cornerMiddleCenter();}
+      if (mode==SIMPLE) {leftSimple();}
+      else if (mode==COMPLEX) {leftComplex();}
       else if (mode==HOMEROW) {leftHomeRow();}
     } else if (side==RIGHT) {
-      if (mode==SIMPLE) {cornerMiddleR();}
-      else if (mode==COMPLEX) {cornerMiddleRHitball();}
+      if (mode==SIMPLE) {rightSimple();}
+      else if (mode==COMPLEX) {rightComplex();}
       else if (mode==HOMEROW) {rightHomeRow();}
     }
   }
