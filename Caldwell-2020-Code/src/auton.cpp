@@ -8,6 +8,7 @@
 #define RIGHT 1
 #define SIMPLE 0
 #define COMPLEX 1
+#define HOMEROW 2
 
 /* MULTI/POLYTASKER FLAG VALUES */
 #define NOTHING 0
@@ -20,6 +21,8 @@
 #define GOALALIGN 7
 #define SCOREBALL 8
 #define DESCOREBALL 9
+#define DESCORETWO 10
+#define DESCORETHREE 11
 
 /* FLAGS FOR MULTI/POLYTASKER */
 int multitasker_flag = NOTHING;
@@ -77,6 +80,12 @@ int multitasker_callback() {
     } else if (multitasker_flag==DESCOREBALL) {
       descoreBall();
       multitasker_flag=NOTHING;
+    } else if (multitasker_flag==DESCORETWO) {
+      descoreBall(2);
+      multitasker_flag=NOTHING;
+    } else if (multitasker_flag==DESCORETHREE) {
+      descoreBall(3);
+      multitasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -119,6 +128,12 @@ int polytasker_callback() {
     } else if (polytasker_flag==DESCOREBALL) {
       descoreBall();
       polytasker_flag=NOTHING;
+    } else if (polytasker_flag==DESCORETWO) {
+      descoreBall(2);
+      polytasker_flag=NOTHING;
+    } else if (polytasker_flag==DESCORETHREE) {
+      descoreBall(3);
+      polytasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -157,6 +172,12 @@ int supertasker_callback() {
     } else if (supertasker_flag==DESCOREBALL) {
       descoreBall();
       supertasker_flag=NOTHING;
+    } else if (supertasker_flag==DESCORETWO) {
+      descoreBall(2);
+      supertasker_flag=NOTHING;
+    } else if (supertasker_flag==DESCORETHREE) {
+      descoreBall(3);
+      supertasker_flag=NOTHING;
     }
     task::sleep(25);
   }
@@ -179,7 +200,7 @@ void simultaneously(int flag) {
  ***               ***
 \*********************/
 
-void fullHomeRow() {
+void rightHomeRow() {
   /*
    * Start position:
    * straddling the tile division
@@ -189,24 +210,25 @@ void fullHomeRow() {
    */
   driveReset(96, 9, 0);
   simultaneously(UNFOLD);
-  turnSlide(108,36,135, 80, 40, 999999, 5, 1, 100, turnD, 3, 3);
+  turnSlide(108,36,135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
   simultaneously(BTHNOINTAKES);
   turnSlide(122,22,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
   simultaneously(DESCOREBALL);
+  stopIntakes();
   goalAlign(600, 8);
   simultaneously(SCOREBALL);
-  simultaneously(OPENWIDE);
   goalAlign(600, 8);
-  turnSlide(120,24,135, 90, 40, 999999, 5, 1, 150, turnD, 3, 3);
+  simultaneously(OPENWIDE);
+  turnSlide(120,28,135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
-  turnSlide(88, 24, 180, 90, 40, 999999, driveP, turnP, 150, turnD, 3, 3);
-  turnSlide(72, 24, 182);
+  turnSlide(88, 28, 180, 90, 40, 999999, 10, turnP, 150, turnD, 3, 3);
+  turnSlide(72, 28, 182);
   simultaneously(DESCOREBALL);
-  goalAlign(800, 8);
+  goalAlign(600, 8);
   simultaneously(SCOREBALL);
   goalAlign(1000, 3);
   simultaneously(OPENWIDE);
-  turnSlide(72, 40, 180, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
+  turnSlide(72, 40, 180, 80, turnMax, 999999, 10, turnP, 150, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
   turnSlide(40, 40, -135, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
   turnSlide(22, 22, -135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
@@ -214,13 +236,13 @@ void fullHomeRow() {
   spinIntakes();
   goalAlign(600, 8);
   simultaneously(SCOREBALL);
-  goalAlign(600, 8);
+  goalAlign(800, 8);
   simultaneously(OPENWIDE);
   Brain.Screen.printAt(1, 160, "%c%", Brain.timer(timeUnits::msec));
-  turnSlide(24, 24, -135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
+  turnSlide(36, 36, -135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
 }
 
-void cornerMiddleR() {
+void leftHomeRow() {
   /*
    * Start position:
    * straddling the tile division
@@ -228,20 +250,62 @@ void cornerMiddleR() {
    * home row goal. This goes for
    * either color.
    */
-  simultaneously(OPENWIDE);
-  turnSlide(24,14,135);
+  driveReset(48, 9, 0);
+  simultaneously(UNFOLD);
+  turnSlide(36,36,-135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
   simultaneously(BTHNOINTAKES);
-  turnSlide(26,12,135);
-  simultaneously(EATBALL);
-  goalAlign(5);
-  scoreBall();
+  turnSlide(22,22,-135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  simultaneously(DESCOREBALL);
+  stopIntakes();
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(600, 8);
+  simultaneously(OPENWIDE);
+  turnSlide(24,28,-135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3);
   simultaneously(BALLTOHOOD);
-  turnSlide(26,12,135);
-  turnSlide(-16,6.8,216,driveMax,turnMax,8000);
-  scoreBall();
-  simultaneously(OPENINTAKES);
-  turnSlide(-16,20,216,driveMax,turnMax,999999,driveP,turnP,driveD,turnD,errorMarginBase,errorMarginTurnDeg+5);
-  eatBall();  
+  turnSlide(54, 28, 180, 90, 40, 999999, 10, turnP, 150, turnD, 3, 3);
+  turnSlide(72, 28, 180);
+  simultaneously(DESCOREBALL);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(1000, 3);
+  simultaneously(OPENWIDE);
+  turnSlide(72, 40, 180, 80, turnMax, 999999, 10, turnP, 150, turnD, 3, 3);
+  simultaneously(BALLTOHOOD);
+  turnSlide(104, 40, 135, 80, turnMax, 999999, driveP, turnP, 150, turnD, 3, 3);
+  turnSlide(122, 22, 135, driveMax, turnMax, 999999, driveP, turnP, driveD, turnD, 3, 3);
+  simultaneously(EATBALL);
+  spinIntakes();
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(800, 8);
+  simultaneously(OPENWIDE);
+  Brain.Screen.printAt(1, 160, "%c%", Brain.timer(timeUnits::msec));
+  turnSlide(108, 36, 135, 100, 100, 14900, 2, turnP, 100, turnD, 5, 5);
+}
+
+void rightSimple() {
+  /*
+   * Start position:
+   * straddling the tile division
+   * to the right of the center
+   * home row goal. This goes for
+   * either color.
+   */
+  driveReset(96, 9, 0);
+  simultaneously(UNFOLD);
+  turnSlide(108,36,0, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
+  simultaneously(BTHNOINTAKES);
+  simultaneously(EATBALL);
+  task::sleep(500);
+  turnSlide(108, 60, 0);
+  turnSlide(108,36,135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
+  turnSlide(122,22,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  simultaneously(DESCOREBALL);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(600, 8);
+  simultaneously(OPENWIDE);
 }
 
 void cornerMiddleRHitball() {
@@ -336,14 +400,16 @@ void autonomous(void) {
   task multitasker = task(multitasker_callback);
   task polytasker = task(polytasker_callback);
   task supertasker = task(supertasker_callback);
-  if (alliance==SKILLS) {fullHomeRow();}
+  if (alliance==SKILLS) {}
   else {
     if (side==LEFT) {
       if (mode==SIMPLE) {cornerMiddleL();}
       else if (mode==COMPLEX) {cornerMiddleCenter();}
+      else if (mode==HOMEROW) {leftHomeRow();}
     } else if (side==RIGHT) {
       if (mode==SIMPLE) {cornerMiddleR();}
       else if (mode==COMPLEX) {cornerMiddleRHitball();}
+      else if (mode==HOMEROW) {rightHomeRow();}
     }
   }
 }

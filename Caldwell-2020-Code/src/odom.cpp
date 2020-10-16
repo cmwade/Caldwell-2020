@@ -1,10 +1,9 @@
 #include "vex.h"
 
 //Physical Distances on the Bot
-float rWidth = 5.935;
-float lWidth = 5.935;
-
-float bLength = 5.935;
+float rWidth = 6.01;
+float lWidth = 6.01;
+float bLength = 6.01;
 
 //Ratios of Odom Wheels
 float rWheelRatio = -0.024948;

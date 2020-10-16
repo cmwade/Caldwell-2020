@@ -9,6 +9,8 @@
 
 #define SIMPLE 0
 #define COMPLEX 1
+#define HOMEROW 2
+
 
 int alliance=BLUE;
 int side=LEFT;
@@ -18,8 +20,10 @@ int selectMode( void ) {
   Brain.Screen.clearScreen(color::black);
   Brain.Screen.drawRectangle(50, 50, 100, 100);
   Brain.Screen.drawRectangle(200, 50, 100, 100);
+  Brain.Screen.drawRectangle(350, 50, 100, 100);
   Brain.Screen.printAt(100, 50, "COMPLEX");
   Brain.Screen.printAt(250, 50, "SIMPLE");
+  Brain.Screen.printAt(400, 50, "HOME ROW");
   int answer;
   int x;
   int y;
@@ -46,6 +50,13 @@ int selectMode( void ) {
           task::sleep(50);
         }
       }
+      else if (x>350 && x<450 && y>50 && y<150) {
+        answer = HOMEROW;
+        waiting = false;
+        while(Brain.Screen.pressing()) {
+          task::sleep(50);
+        }
+      }
     }
   }
   Brain.Screen.setCursor(1, 1);
@@ -58,11 +69,17 @@ int selectMode( void ) {
       returnvalue = COMPLEX;
       break;
     case SIMPLE:
-      Brain.Screen.print("You have chosen Simple");
+      Brain.Screen.print("You have chosen Simple.");
       task::sleep(1000);
       Brain.Screen.clearScreen();
       returnvalue = SIMPLE;
       break;
+    case HOMEROW:
+      Brain.Screen.print("You have chosen HomeRow.");
+      task::sleep(1000);
+      Brain.Screen.clearScreen();
+      returnvalue = HOMEROW;
+      break;  
   }
   return returnvalue;
 }
@@ -197,7 +214,8 @@ void pre_auton( void ) {
   else {Brain.Screen.printAt(1,40,"Side: Right");}
 
   if (mode==SIMPLE) {Brain.Screen.printAt(1,60,"Mode: Simple");}
-  else {Brain.Screen.printAt(1,60,"Mode: Complex");}
+  else if (mode==COMPLEX) {Brain.Screen.printAt(1,60,"Mode: Complex");}
+  else {Brain.Screen.printAt(1, 60, "Mode: Home Row");}
 
   if (alliance==RED || alliance==SKILLS) {unwantedColor=1;}
   else if (alliance==BLUE) {unwantedColor=2;}

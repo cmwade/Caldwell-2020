@@ -44,8 +44,8 @@ void BallReject(float timeoutMsec) {
 }
 
 void scoreBall(float potValuePct, float timeoutMsec) {
-  BalltoHood(potValuePct,999999,false);
-  while (HoodPot.value(percentUnits::pct) > 20) {
+  float starttime = Brain.timer(timeUnits::msec);
+  while (Brain.timer(timeUnits::msec) - starttime < 1000) {
   RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
   RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
   }
