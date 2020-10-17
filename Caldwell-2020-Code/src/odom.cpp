@@ -1,10 +1,9 @@
 #include "vex.h"
 
 //Physical Distances on the Bot
-float rWidth = 5.935;
-float lWidth = 5.935;
-
-float bLength = 5.935;
+float rWidth = 6.01;
+float lWidth = 6.01;
+float bLength = 6.01;
 
 //Ratios of Odom Wheels
 float rWheelRatio = -0.024948;
@@ -83,9 +82,10 @@ void setDriveVoltage( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpeed
   RF.spin(directionType::fwd, RFSpeed, voltageUnits::volt);
 }
 
-void goalAlign( float voltage, float timeoutMsec) {
-  while ( not( FANG.pressing() ) and Brain.timer(timeUnits::msec) < timeoutMsec) {
-    setDriveVoltage( voltage, voltage, voltage, voltage);
+void goalAlign( float timeMsec, float voltage) {
+  float startingtime = Brain.timer(timeUnits::msec);
+  while ( Brain.timer(timeUnits::msec) - startingtime < timeMsec) {
+    setDriveVoltage(voltage, voltage, voltage, voltage);
   }
   setDriveVoltage(0,0,0,0);
 }
@@ -189,7 +189,7 @@ void driveReset(float X, float Y, float OrientationDeg) {
   prevGlobalY = Y;
 }
 
-void turnSlide(float endX, float endY, float endRotationDeg, bool holdAtTarget, float maxDriveValue, float maxTurnValue, float timeoutMsec, float drivePValue, float turnPValue, float driveDValue, float turnDValue, float driveErrorMargin, float turnErrorMarginDeg) {
+void turnSlide(float endX, float endY, float endRotationDeg, float maxDriveValue, float maxTurnValue, float timeoutMsec, float drivePValue, float turnPValue, float driveDValue, float turnDValue, float driveErrorMargin, float turnErrorMarginDeg) {
   endRotationDeg = reduceAngle0to360(endRotationDeg);
 
   float turnError = reduceAngleMinus180to180(endRotationDeg - absOrientationDeg);
@@ -200,8 +200,8 @@ void turnSlide(float endX, float endY, float endRotationDeg, bool holdAtTarget, 
 
   float prevTurnError = turnError;
   float prevDriveError = driveError;
-
-  while( ((reduceAngleMinus180to180(turnError)) > turnErrorMarginDeg || (reduceAngleMinus180to180(turnError)) < -turnErrorMarginDeg || driveError > driveErrorMargin || driveError < -driveErrorMargin) && Brain.timer(timeUnits::msec) < timeoutMsec && holdAtTarget == true){
+  
+  while( ((reduceAngleMinus180to180(turnError)) > turnErrorMarginDeg || (reduceAngleMinus180to180(turnError)) < -turnErrorMarginDeg || driveError > driveErrorMargin || driveError < -driveErrorMargin) && Brain.timer(timeUnits::msec) < timeoutMsec){
     turnError = reduceAngleMinus180to180(endRotationDeg - absOrientationDeg);
     driveError = sqrt(pow((endX - absGlobalX), 2) + pow((endY - absGlobalY), 2));
 

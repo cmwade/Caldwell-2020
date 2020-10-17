@@ -18,7 +18,7 @@ void openIntakesWide() {
   float lStart;
   float rStart;
   Brain.Screen.clearScreen();
-  while (avgGain > 5) {
+  while (avgGain > 1) {
     lStart = IntakeL.rotation(rotationUnits::deg);
     rStart = IntakeR.rotation(rotationUnits::deg);
     task::sleep(25);
@@ -53,17 +53,44 @@ void stopIntakes() {
 }
 
 void unfold() {
-  IntakeL.spin(directionType::rev,12,voltageUnits::volt);
+  RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
   IntakeR.spin(directionType::rev,12,voltageUnits::volt);
-  task::sleep(1500);
-  IntakeL.spin(directionType::fwd,100,velocityUnits::pct);
-  IntakeR.spin(directionType::fwd,100,velocityUnits::pct);
+  task::sleep(500);
+  RollerBack.stop();
+  IntakeL.spin(directionType::rev,12,voltageUnits::volt);
 }
 
 void eatBall() {
   IntakeL.spin(directionType::fwd,100,velocityUnits::pct);
   IntakeR.spin(directionType::fwd,100,velocityUnits::pct);
-  task::sleep(250);
-  IntakeL.stop(coast);
-  IntakeR.stop(coast);
+  task::sleep(500);
+  IntakeL.stop();
+  IntakeR.stop();
+}
+
+void descoreBall( int numberOfBalls ) {
+  int n = 0;
+  float starttime = Brain.timer(timeUnits::msec);
+  while(n < numberOfBalls) {
+    IntakeL.stop();
+    IntakeR.stop();
+    RollerMain.stop();
+    starttime = Brain.timer(timeUnits::msec);
+    while(BallDetector.pressing()){
+      IntakeL.spin(directionType::fwd,100,velocityUnits::pct);
+      IntakeR.spin(directionType::fwd,100,velocityUnits::pct);
+      RollerMain.spin(directionType::fwd,100,velocityUnits::pct);
+    }
+    while(not(BallDetector.pressing())){
+      IntakeL.spin(directionType::fwd,100,velocityUnits::pct);
+      IntakeR.spin(directionType::fwd,100,velocityUnits::pct);
+      RollerMain.spin(directionType::fwd,100,velocityUnits::pct);
+    }
+    IntakeL.stop();
+    IntakeR.stop();
+    RollerMain.stop();
+    if (Brain.timer(timeUnits::msec) - starttime > 250) {
+    n+=1;
+    }
+  }
 }

@@ -1,5 +1,9 @@
 #include "vex.h"
 
+#define NO_BALL 0
+#define BLUE 1
+#define RED 2
+
 #define AUTO 0
 #define MANUAL 1
 int method = AUTO;
@@ -56,12 +60,16 @@ void stopOpeningIntakes() {
   intakesOpening = false;
   IntakeL.stop(hold);
   IntakeR.stop(hold);
-}
+} 
 
 void usercontrol(void) {
   float throttle;
   float strafe;
   float turn;
+  LF.setBrake(brakeType::coast);
+  LB.setBrake(brakeType::coast);
+  RB.setBrake(brakeType::coast);
+  RF.setBrake(brakeType::coast);
   while(1) {
         
     //Drivebase Code
@@ -78,33 +86,42 @@ void usercontrol(void) {
     //Intake and Roller Code
 
     //Intakes
-    con.ButtonR1.pressed(spinIntakes);
-    con.ButtonR1.released(stopIntakes);
-    con.ButtonR2.pressed(openIntakesUSR);
-    con.ButtonR2.released(stopOpeningIntakes);
+    con.ButtonL1.pressed(spinIntakes);
+    con.ButtonL1.released(stopIntakes);
+    con.ButtonL2.pressed(openIntakesUSR);
+    con.ButtonL2.released(stopOpeningIntakes);
     
     //Switching Roller Control Methods
     
     con.ButtonLeft.pressed(toggleAutoSorter);
     
     //Rollers
-    if (con.ButtonL1.pressing() && con.ButtonL2.pressing()) { //Roll Out Back
+    if (con.ButtonR1.pressing() && con.ButtonR2.pressing()) {
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-    } else if (con.ButtonL1.pressing()) { //Roll Everything In
-      if (reject && method == AUTO) {
+    } else if (con.ButtonR1.pressing()) {
+      RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+      RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+    } else if (con.ButtonR2.pressing()) {
+      RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
+      RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+    } else if (method==AUTO) {
+      if ( HoodPot.value(percentUnits::pct) < 20 && ballstatus != unwantedColor) {
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+      } else if ( HoodPot.value(percentUnits::pct) > 20 && ballstatus == NO_BALL) {
+        RollerBack.stop(brakeType::coast);
+        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+      } else if ( ballstatus == unwantedColor ) {
         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
         RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
       } else {
-         RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-      }
-    } else if (con.ButtonL2.pressing()) { //Roll Everything Out
-      RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
-      RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+        RollerMain.stop(brakeType::hold);
+        RollerBack.stop(brakeType::hold);
+      } 
     } else {
-      RollerMain.stop(brakeType::coast);
-      RollerBack.stop(brakeType::coast);
+      RollerMain.stop(brakeType::hold);
+      RollerBack.stop(brakeType::hold);
     }
   }
 }
