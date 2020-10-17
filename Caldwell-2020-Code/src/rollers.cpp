@@ -23,7 +23,7 @@ void BallReject(float timeoutMsec) {
   while (!rejected && Brain.timer(timeUnits::msec) < timeoutMsec) {
     IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
     IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
-    if (reject) {
+    if (ballstatus == unwantedColor) {
       amRejecting = true;
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);

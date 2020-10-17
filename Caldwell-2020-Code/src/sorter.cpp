@@ -4,7 +4,7 @@
 #define BLUE 1
 #define RED 2
 
-bool reject = false;
+int ballstatus = NO_BALL;
 
 int unwantedColor;
 
@@ -33,12 +33,9 @@ int getBall() { //gets whether there is a ball in front of the sensor, and what 
 }
 
 int ballSort() { //callback for the ball sorting task
-  int lastColor = unwantedColor;
   while(true) {
-    int ball = getBall();
-    if (ball != NO_BALL) {lastColor = ball;}
-    if (lastColor == unwantedColor) {reject=true;}
-    else {reject=false;}
+    ballstatus = getBall();
+    task::sleep(25);
   }
   return 0;
 }

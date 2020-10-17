@@ -2,7 +2,7 @@ using namespace vex;
 
 extern task ballsortertask;
 
-extern bool reject;
+extern int ballstatus;
 extern int unwantedColor;
 
 int getBall();
