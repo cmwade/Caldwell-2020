@@ -16,7 +16,7 @@ int alliance=BLUE;
 int side=LEFT;
 int mode=SIMPLE;
 
-int selectMode( void ) {
+int selectMode( void ) { //Ask for mode.
   Brain.Screen.clearScreen(color::black);
   Brain.Screen.drawRectangle(50, 50, 100, 100);
   Brain.Screen.drawRectangle(200, 50, 100, 100);
@@ -59,7 +59,7 @@ int selectMode( void ) {
       }
     }
   }
-  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.setCursor(1, 1); //Returns the auton selected.
   int returnvalue;
   switch(answer) {
     case COMPLEX:
@@ -84,7 +84,7 @@ int selectMode( void ) {
   return returnvalue;
 }
 
-int selectAlliance( void ) {
+int selectAlliance( void ) { //Select from red, blue, and purple alliance. (Where purple is skills.)
   Brain.Screen.drawCircle(100, 100, 50, color::red);
   Brain.Screen.drawCircle(400, 100, 50, color::blue);
   Brain.Screen.drawCircle(250, 100, 50, color::purple);
@@ -123,7 +123,7 @@ int selectAlliance( void ) {
       }
     }
   }
-  int returnvalue;
+  int returnvalue; //Returns the alliance selected.
   switch (answer) {
   case 1:
     Brain.Screen.clearScreen(color::blue);
@@ -181,7 +181,7 @@ int selectSide( void ) {
       }
     }
   }
-  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.setCursor(1, 1); //Returns the side selected.
   bool returnvalue;
   switch(answer) {
     case LEFT:

@@ -105,20 +105,9 @@ void usercontrol(void) {
     } else if (con.ButtonR2.pressing()) {
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-    } else if (method==AUTO) {
-      if ( HoodPot.value(percentUnits::pct) < 20 && ballstatus != unwantedColor) {
-        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
-      } else if ( HoodPot.value(percentUnits::pct) > 20 && ballstatus == NO_BALL) {
-        RollerBack.stop(brakeType::coast);
-        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-      } else if ( ballstatus == unwantedColor ) {
-        RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
-        RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-      } else {
-        RollerMain.stop(brakeType::hold);
-        RollerBack.stop(brakeType::hold);
-      } 
+    } else if ( HoodPot.value(percentUnits::pct) < 20 ) {
+      RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+      RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
     } else {
       RollerMain.stop(brakeType::hold);
       RollerBack.stop(brakeType::hold);
