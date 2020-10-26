@@ -8,6 +8,8 @@
 #define MANUAL 1
 int method = AUTO;
 
+bool bth = false;
+
 void toggleAutoSorter(void) {
   if (method==AUTO) {method=MANUAL;}
   else {method=AUTO;}
@@ -95,6 +97,11 @@ void usercontrol(void) {
     
     con.ButtonLeft.pressed(toggleAutoSorter);
     
+    //Ball to Hood
+    if (con.ButtonB.pressing()) {
+      bth = true;
+    }
+    
     //Rollers
     if (con.ButtonR1.pressing() && con.ButtonR2.pressing()) {
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
@@ -105,10 +112,11 @@ void usercontrol(void) {
     } else if (con.ButtonR2.pressing()) {
       RollerMain.spin(directionType::rev, 100, velocityUnits::pct);
       RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
-    } else if ( HoodPot.value(percentUnits::pct) < 20 ) {
+    } else if ( HoodPot.value(percentUnits::pct) < 20 && bth == true) {
       RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
       RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
     } else {
+      bth = false;
       RollerMain.stop(brakeType::hold);
       RollerBack.stop(brakeType::hold);
     }
