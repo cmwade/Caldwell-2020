@@ -315,7 +315,7 @@ void rightSimple() {
   task::sleep(500);
   simultaneously(EATBALL);
   task::sleep(250);
-  turnSlide(108, 62, 0);
+  turnSlide(108, 50, 0);
   turnSlide(108,36,135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
   turnSlide(122,22,135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
   //First Goal
@@ -391,9 +391,11 @@ void leftSimple() {
   simultaneously(EATBALL);
   RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
   RollerBack.spin(directionType::rev, 100, velocityUnits::pct);
+  spinIntakes();
   turnSlide(36, 61, 0);
   //Center Goal
   turnSlide(48, 61, 0);
+  stopIntakes();
   turnSlide(60, 61, 0, 100, 10, 14600, 6);
   turnSlide(40, 40, 0, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
 }
@@ -433,14 +435,15 @@ void leftComplex() {
   simultaneously(OPENWIDE);
   turnSlide(72, 36, 180, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
   turnSlide(46, 36, 0, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
-  simultaneously(EATBALL);
+  spinIntakes();
   //Center Goal
   turnSlide(48, 61, 0);
+  stopIntakes();
   turnSlide(60, 61, 0, 100, 10, 14600, 6);
   turnSlide(40, 40, 0, 100, 100, 14900, 5, turnP, 100, turnD, 5, 5);
 }
 
-void skills() {
+void homerowskills() {
   driveReset(96, 9, 0);
   turnSlide(84, 24, 0);
   turnSlide(84, 24, 90);
@@ -510,7 +513,7 @@ void autonomous(void) {
   task polytasker = task(polytasker_callback);
   task supertasker = task(supertasker_callback);
   //Determining the auton to run based on the one selected.
-  if (alliance==SKILLS && mode == SIMPLE) { skills(); }
+  if (alliance==SKILLS && mode == SIMPLE) { homerowskills(); }
   if (alliance == SKILLS && mode == COMPLEX) {}
   else {
     if (side==LEFT) {
