@@ -62,6 +62,14 @@ void stopOpeningIntakes() {
   IntakeR.stop(hold);
 } 
 
+void unfold() {
+  IntakeL.spin(directionType::rev, 100, percentUnits::pct);
+  IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
+  task::sleep(750);
+  IntakeL.stop(coast);
+  IntakeR.stop(coast);
+}
+
 void usercontrol(void) {
   float throttle;
   float strafe;
@@ -90,6 +98,7 @@ void usercontrol(void) {
     con.ButtonL1.released(stopIntakes);
     con.ButtonL2.pressed(openIntakesUSR);
     con.ButtonL2.released(stopOpeningIntakes);
+    con.ButtonA.pressed(unfold);
     
     //Switching Roller Control Methods
     
