@@ -62,14 +62,6 @@ void stopOpeningIntakes() {
   IntakeR.stop(hold);
 } 
 
-void unfold() {
-  IntakeL.spin(directionType::rev, 100, percentUnits::pct);
-  IntakeR.spin(directionType::rev, 100, velocityUnits::pct);
-  task::sleep(750);
-  IntakeL.stop(coast);
-  IntakeR.stop(coast);
-}
-
 void usercontrol(void) {
   float throttle;
   float strafe;
