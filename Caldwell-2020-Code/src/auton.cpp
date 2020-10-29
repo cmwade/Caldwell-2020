@@ -505,6 +505,58 @@ void homerowskills() {
   turnSlide(24,24,-135, 90, 40, 59000, driveP, 1, 150, turnD, 3, 3);
 }
 
+void diagonalSkills() {
+  driveReset(48, 9, 0);
+  turnSlide(60, 24, 0);
+  turnSlide(60, 24, -90);
+  simultaneously(UNFOLD);
+  task::sleep(1500);
+  turnSlide(50, 24, -90);
+  eatBall();
+  spinIntakes();
+  turnSlide(36,36,-135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
+  simultaneously(BTHNOINTAKES);
+  turnSlide(22,22,-135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
+  simultaneously(DESCORETWO);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(1000, 3);
+  scoreBall();
+  simultaneously(OPENWIDE);
+  turnSlide(24,24,-135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3);
+  turnSlide(24, 24, 180);
+  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+  RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
+  task::sleep(2000);
+  RollerMain.stop();
+  RollerBack.stop();
+  turnSlide(24, 24, 0);
+  simultaneously(OPENWIDE);
+  turnSlide(72, 24, 0);
+  turnSlide(72, 34, 0);
+  BalltoHood();
+  turnSlide(77, 36, 0);
+  turnSlide(77, 52, 0);
+  goalAlign(1000, 12);
+  turnSlide(77, 52, 0);
+  goalAlign(1000, 12);
+  turnSlide(72, 40, 0);
+  turnSlide(72, 58, 0);
+  goalAlign(500, 4);
+  scoreBall();
+  turnSlide(72, 48, 0);
+  turnSlide(96, 48, 0);
+  turnSlide(96, 58, 0);
+  BalltoHood();
+  turnSlide(122, 122, 45);
+  simultaneously(DESCORETWO);
+  goalAlign(600, 8);
+  simultaneously(SCOREBALL);
+  goalAlign(1000, 3);
+  task::sleep(2000);
+  turnSlide(36, 36, 45);
+}
+
 void autonomous(void) {
   Brain.resetTimer();
   /* START THE TASKS */
@@ -514,7 +566,7 @@ void autonomous(void) {
   task supertasker = task(supertasker_callback);
   //Determining the auton to run based on the one selected.
   if (alliance==SKILLS && mode == SIMPLE) { homerowskills(); }
-  if (alliance == SKILLS && mode == COMPLEX) {}
+  if (alliance == SKILLS && mode == COMPLEX) { diagonalSkills(); }
   else {
     if (side==LEFT) {
       if (mode==SIMPLE) {leftSimple();}
