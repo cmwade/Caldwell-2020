@@ -36,14 +36,14 @@ float absGlobalX = 0;
 float absGlobalY = 0; 
 
 //Constants for Motion Control
-float turnP = 1.2;
+float turnP = 2.4;
 float driveP = 6;
 float turnD = 20;
 float driveD = 40;
 float turnMax = 40;
-float driveMax = 60;
+float driveMax = 70;
 float errorMarginBase = 1;
-float errorMarginTurnDeg = 0.5;
+float errorMarginTurnDeg = 0.2;
 
 float pi = 3.14159265359;
 
