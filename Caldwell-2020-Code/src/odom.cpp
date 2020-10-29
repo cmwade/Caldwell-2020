@@ -82,7 +82,7 @@ void setDriveVoltage( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpeed
   RF.spin(directionType::fwd, RFSpeed, voltageUnits::volt);
 }
 
-void goalAlign( float timeMsec, float voltage) {
+void goalAlign( float timeMsec, float voltage) { 
   float startingtime = Brain.timer(timeUnits::msec);
   while ( Brain.timer(timeUnits::msec) - startingtime < timeMsec) {
     setDriveVoltage(voltage, voltage, voltage, voltage);
