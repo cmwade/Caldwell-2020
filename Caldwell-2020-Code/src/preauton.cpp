@@ -16,7 +16,12 @@ int alliance=BLUE;
 int side=LEFT;
 int mode=SIMPLE;
 
-int selectMode( void ) { //Ask for mode.
+// Auton Selector for Use Before Matches
+
+int selectMode( void ) { 
+
+  //Ask for mode.
+
   Brain.Screen.clearScreen(color::black);
   Brain.Screen.drawRectangle(50, 50, 100, 100);
   Brain.Screen.drawRectangle(200, 50, 100, 100);
@@ -29,6 +34,9 @@ int selectMode( void ) { //Ask for mode.
   int y;
   bool waiting=true;
   while(waiting) {
+
+    // Finds where the screen has been pressed.
+
     if (con.ButtonY.pressing()) {
       answer = SIMPLE;
       waiting = false;
@@ -59,7 +67,10 @@ int selectMode( void ) { //Ask for mode.
       }
     }
   }
-  Brain.Screen.setCursor(1, 1); //Returns the auton selected.
+  Brain.Screen.setCursor(1, 1); 
+
+  //Returns the auton selected.
+
   int returnvalue;
   switch(answer) {
     case COMPLEX:
@@ -84,7 +95,10 @@ int selectMode( void ) { //Ask for mode.
   return returnvalue;
 }
 
-int selectAlliance( void ) { //Select from red, blue, and purple alliance. (Where purple is skills.)
+int selectAlliance( void ) { 
+
+  // Selects from red, blue, and purple alliance (where purple is skills).
+
   Brain.Screen.drawCircle(100, 100, 50, color::red);
   Brain.Screen.drawCircle(400, 100, 50, color::blue);
   Brain.Screen.drawCircle(250, 100, 50, color::purple);
@@ -97,6 +111,9 @@ int selectAlliance( void ) { //Select from red, blue, and purple alliance. (Wher
       answer = RED;
       waiting = false;
     }
+
+    //Gets the position of the press on the screen.
+
     if (Brain.Screen.pressing()) {
       x = Brain.Screen.xPosition();
       y = Brain.Screen.yPosition();
@@ -123,7 +140,10 @@ int selectAlliance( void ) { //Select from red, blue, and purple alliance. (Wher
       }
     }
   }
-  int returnvalue; //Returns the alliance selected.
+  int returnvalue; 
+
+  //Returns the alliance selected.
+
   switch (answer) {
   case 1:
     Brain.Screen.clearScreen(color::blue);
@@ -148,6 +168,9 @@ int selectAlliance( void ) { //Select from red, blue, and purple alliance. (Wher
 }
 
 int selectSide( void ) {
+
+  // Selects left or right starting position.
+
   Brain.Screen.clearScreen(color::black);
   Brain.Screen.drawRectangle(50, 50, 100, 100);
   Brain.Screen.drawRectangle(200, 50, 100, 100);
@@ -162,6 +185,9 @@ int selectSide( void ) {
       answer = LEFT;
       waiting = false;
     }
+
+    // Gets the position of the press on the screen.
+
     if (Brain.Screen.pressing()) {
       x = Brain.Screen.xPosition();
       y = Brain.Screen.yPosition();
@@ -181,7 +207,10 @@ int selectSide( void ) {
       }
     }
   }
-  Brain.Screen.setCursor(1, 1); //Returns the side selected.
+  Brain.Screen.setCursor(1, 1); 
+
+  //Returns the side selected.
+
   bool returnvalue;
   switch(answer) {
     case LEFT:
@@ -201,11 +230,16 @@ int selectSide( void ) {
 }
 
 void pre_auton( void ) {
+
+  // Runs the ball sorting tasks and the autonomous selection.
+
   task ballsortertask = task(ballSort);
   alliance = selectAlliance();
   side = selectSide();
   mode = selectMode();
 
+  //Prints the modes chosen.
+  
   if (alliance==RED) {Brain.Screen.printAt(1, 20, "Alliance: Red");}
   else if (alliance==BLUE) {Brain.Screen.printAt(1,20,"Alliance: Blue");}
   else {Brain.Screen.printAt(1,20,"Alliance: Skills");}
@@ -216,6 +250,8 @@ void pre_auton( void ) {
   if (mode==SIMPLE) {Brain.Screen.printAt(1,60,"Mode: Simple");}
   else if (mode==COMPLEX) {Brain.Screen.printAt(1,60,"Mode: Complex");}
   else {Brain.Screen.printAt(1, 60, "Mode: Home Row");}
+
+  // Statements for ball ejection.
 
   if (alliance==RED || alliance==SKILLS) {unwantedColor=1;}
   else if (alliance==BLUE) {unwantedColor=2;}

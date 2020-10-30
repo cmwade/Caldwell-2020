@@ -1,16 +1,16 @@
 #include "vex.h"
 
-//Physical Distances on the Bot
+//Physical Distances on the Bot, measured in inches from the center
 float rWidth = 6.01;
 float lWidth = 6.01;
 float bLength = 6.01;
 
-//Ratios of Odom Wheels
+//Ratios of Odom Wheels, in Inches/Degrees
 float rWheelRatio = -0.024948;
 float lWheelRatio = 0.024742; 
 float bWheelRatio = -0.024603; 
 
-//Variables to Calulate Deltas
+//Variables to Calulate Deltas in Encoder Values
 float prevL = 0;
 float prevR = 0; 
 float prevB = 0;
@@ -35,7 +35,7 @@ float deltaB = 0;
 float absGlobalX = 0; 
 float absGlobalY = 0; 
 
-//Constants for Motion Control
+//Constants for Motion Control, where "P" is proportional and "D" is derivative.
 float turnP = 1.2;
 float driveP = 6;
 float turnD = 20;
@@ -45,14 +45,14 @@ float driveMax = 60;
 float errorMarginBase = 1;
 float errorMarginTurnDeg = 0.5;
 
-float pi = 3.14159265359;
+float pi = 3.14159265359; //Pi
 
 //Encoder Values
 float currentL = 0;
 float currentR = 0;
 float currentB = 0;
 
-float reduceAngle0to360( float angleDeg ) {
+float reduceAngle0to360( float angleDeg ) { //Takes an input angle in degrees and converts it to a positive angle value below 360.
   while(!(angleDeg >= 0 && angleDeg < 360)) {
     if( angleDeg < 0 ) { angleDeg += 360; }
     if(angleDeg >= 360) { angleDeg -= 360; }
@@ -60,7 +60,7 @@ float reduceAngle0to360( float angleDeg ) {
   return(angleDeg);
 }
 
-float reduceAngleMinus180to180( float angleDeg ) {
+float reduceAngleMinus180to180( float angleDeg ) { //Takes an input angle in degrees and converts it to an angle between -180 and 180.
   while(!(angleDeg >= -180 && angleDeg < 180)) {
     if( angleDeg < -180 ) { angleDeg += 360; }
     if(angleDeg >= 180) { angleDeg -= 360; }
@@ -82,7 +82,7 @@ void setDriveVoltage( float LFSpeed, float LBSpeed, float RBSpeed, float RFSpeed
   RF.spin(directionType::fwd, RFSpeed, voltageUnits::volt);
 }
 
-void goalAlign( float timeMsec, float voltage) { 
+void goalAlign( float timeMsec, float voltage) { //Drives the robot into a goal for a specified time at a specified voltage.
   float startingtime = Brain.timer(timeUnits::msec);
   while ( Brain.timer(timeUnits::msec) - startingtime < timeMsec) {
     setDriveVoltage(voltage, voltage, voltage, voltage);
@@ -97,7 +97,7 @@ void driveHold( void ) {
   RF.stop(brakeType::hold);
 }
 
-void updateEncoders() {
+void updateEncoders() { //Calculates the change in encoder values from the last cycle.
     currentL = (EncoderL.rotation(rotationUnits::deg))*(lWheelRatio); 
     currentR = (EncoderR.rotation(rotationUnits::deg))*(rWheelRatio); 
     currentB = (EncoderB.rotation(rotationUnits::deg))*(bWheelRatio); 
@@ -111,12 +111,12 @@ void updateEncoders() {
     prevB = currentB; 
 }
 
-void updatePosition() {
+void updatePosition() { //Approximates the motion of the robot as an arc, and updates its position accordingly
     absOrientationRad = (currentL-currentR)/(rWidth + lWidth); 
 
     absOrientationDeg = reduceAngle0to360(absOrientationRad*(180/pi)); 
 
-    float deltaA = (deltaL-deltaR)/(rWidth + lWidth); 
+    float deltaA = (deltaL-deltaR)/(rWidth + lWidth); //Change in angle.
 
     //Calulates coordinates relative to the chord of the robot's arc.
     if (deltaA == 0) { //Prevents divide by zero error.
@@ -153,10 +153,11 @@ void updatePosition() {
     prevGlobalX = absGlobalX;
     prevGlobalY = absGlobalY;
 
+    //Sets up the previous orientation for deltas.
     prevOrientationRad = absOrientationRad;
 }
 
-int positionTrack() {
+int positionTrack() { //Background thread used to position track full time.
   while(1){
     updateEncoders();
     updatePosition();
@@ -170,7 +171,7 @@ int positionTrack() {
   }
 }
 
-void driveReset(float X, float Y, float OrientationDeg) {
+void driveReset(float X, float Y, float OrientationDeg) { //Tells the robot its position on the field at the beginning of a match.
   EncoderR.setRotation(0, rotationUnits::deg);
   EncoderL.setRotation((rWidth+lWidth)*(pi/180)*(OrientationDeg)/(lWheelRatio), rotationUnits::deg);
   EncoderB.setRotation(0, rotationUnits::deg);
@@ -190,10 +191,13 @@ void driveReset(float X, float Y, float OrientationDeg) {
 }
 
 void turnSlide(float endX, float endY, float endRotationDeg, float maxDriveValue, float maxTurnValue, float timeoutMsec, float drivePValue, float turnPValue, float driveDValue, float turnDValue, float driveErrorMargin, float turnErrorMarginDeg) {
+
+  //Using a PD controller, simultaneously turns and drives to a point.
+
   endRotationDeg = reduceAngle0to360(endRotationDeg);
 
   float turnError = reduceAngleMinus180to180(endRotationDeg - absOrientationDeg);
-  float driveError = sqrt(pow((endX - absGlobalX), 2) + pow((endY - absGlobalY), 2));
+  float driveError = sqrt(pow((endX - absGlobalX), 2) + pow((endY - absGlobalY), 2)); //Drive error is the absolute distance from the tracking center to the desired point, calculated using the Pythagorean Theorem.
 
   float deltaTurnError = 0;
   float deltaDriveError = 0;
@@ -203,13 +207,13 @@ void turnSlide(float endX, float endY, float endRotationDeg, float maxDriveValue
   
   while( ((reduceAngleMinus180to180(turnError)) > turnErrorMarginDeg || (reduceAngleMinus180to180(turnError)) < -turnErrorMarginDeg || driveError > driveErrorMargin || driveError < -driveErrorMargin) && Brain.timer(timeUnits::msec) < timeoutMsec){
     turnError = reduceAngleMinus180to180(endRotationDeg - absOrientationDeg);
-    driveError = sqrt(pow((endX - absGlobalX), 2) + pow((endY - absGlobalY), 2));
+    driveError = sqrt(pow((endX - absGlobalX), 2) + pow((endY - absGlobalY), 2)); //Absolute distance from the tracking center to the desired point.
 
     deltaTurnError = turnError - prevTurnError;
     deltaDriveError = driveError - prevDriveError;
 
-    float finalTurn = turnError*turnPValue - deltaTurnError*turnDValue;
-    float finalDrive = driveError*drivePValue - deltaDriveError*driveDValue;
+    float finalTurn = turnError*turnPValue - deltaTurnError*turnDValue; //Final value to pass to the motor, taking P and D loops into account.
+    float finalDrive = driveError*drivePValue - deltaDriveError*driveDValue; //Final drive value to pass to the motor, taking P and D loops into account.
 
     prevTurnError = turnError;
     prevDriveError = driveError;
@@ -228,9 +232,9 @@ void turnSlide(float endX, float endY, float endRotationDeg, float maxDriveValue
       finalDrive = -maxDriveValue;
     }
     setDriveVelocity(
-      finalDrive*(cos(absOrientationRad + atan2(endY - absGlobalY, endX - absGlobalX) - pi/4)) + finalTurn,
-      finalDrive*(cos(3*pi/4-atan2(endY - absGlobalY, endX - absGlobalX)-absOrientationRad))+finalTurn,
-      finalDrive*(cos(absOrientationRad + atan2(endY - absGlobalY, endX - absGlobalX) - pi/4)) - finalTurn,
+      finalDrive*(cos(absOrientationRad + atan2(endY - absGlobalY, endX - absGlobalX) - pi/4)) + finalTurn, // The robot uses trigonometry to determine the ideal value to pass to a motor
+      finalDrive*(cos(3*pi/4-atan2(endY - absGlobalY, endX - absGlobalX)-absOrientationRad))+finalTurn,     // given each wheel's 45 degree offset. This value for the drive is then added
+      finalDrive*(cos(absOrientationRad + atan2(endY - absGlobalY, endX - absGlobalX) - pi/4)) - finalTurn, // to the value for turning, which is negative on the right side of the bot.
       finalDrive*(cos(3*pi/4-atan2(endY - absGlobalY, endX - absGlobalX)-absOrientationRad))-finalTurn
     );
 
@@ -239,7 +243,7 @@ void turnSlide(float endX, float endY, float endRotationDeg, float maxDriveValue
   driveHold();
 }
 
-void calibratePositionTrackers( void ) {
+void calibratePositionTrackers( void ) { //Used to find the most exact values for distances between encoders and wheel ratios.
   Brain.Screen.clearScreen();
   while(not(Brain.Screen.pressing())){
     Brain.Screen.printAt(1, 20, "Move the robot forward 96 inches. Tap to begin. ");
