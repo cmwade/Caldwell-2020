@@ -1,7 +1,7 @@
 #include "vex.h"
 
 void BalltoHood ( float potValuePct, float timeoutMsec, bool intakes ) {
-  while ( HoodPot.value(percentUnits::pct) < potValuePct && Brain.timer(timeUnits::msec) < timeoutMsec) {
+  while ( HoodPot.value(percentUnits::pct) < potValuePct && Brain.timer(timeUnits::msec) < timeoutMsec) { //Spins everything up.
     if (intakes) {
       IntakeR.spin(directionType::fwd, 100, velocityUnits::pct);
       IntakeL.spin(directionType::fwd, 100, velocityUnits::pct);
@@ -9,7 +9,7 @@ void BalltoHood ( float potValuePct, float timeoutMsec, bool intakes ) {
     RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
     RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
   }
-  if (intakes) {
+  if (intakes) { //Stops everything after the ball exceeds the top of the robot's hood.
     IntakeR.stop(coast);
     IntakeL.stop(coast);
   }
@@ -17,7 +17,7 @@ void BalltoHood ( float potValuePct, float timeoutMsec, bool intakes ) {
   RollerBack.stop();
 }
 
-void BallReject(float timeoutMsec) {
+void BallReject(float timeoutMsec) { //Used to spin unwanted balls out the back of the robot.
   bool rejected = false;
   bool amRejecting = false;
   while (!rejected && Brain.timer(timeUnits::msec) < timeoutMsec) {
@@ -43,9 +43,9 @@ void BallReject(float timeoutMsec) {
   RollerBack.stop();
 }
 
-void scoreBall(float potValuePct, float timeoutMsec) {
-  BalltoHood(potValuePct, 999999, false);
-  while (HoodPot.value(percentUnits::pct) > 20) {
+void scoreBall(float potValuePct, float timeoutMsec) { 
+  BalltoHood(potValuePct, 999999, false); //Brings balls to the top of the hood.
+  while (HoodPot.value(percentUnits::pct) > 20) { //Spins until the balls are no longer sensed.
   RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
   RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
   }
