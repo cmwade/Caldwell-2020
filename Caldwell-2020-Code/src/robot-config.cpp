@@ -24,7 +24,7 @@ encoder EncoderL = encoder(Brain.ThreeWirePort.C);
 encoder EncoderR = encoder(Brain.ThreeWirePort.E);
 encoder EncoderB = encoder(Brain.ThreeWirePort.G);
 limit BallDetector = limit(Brain.ThreeWirePort.B); //Detects Balls Recently Descored
-pot HoodPot = pot(Brain.ThreeWirePort.A);
+pot HoodPot = pot(Brain.ThreeWirePort.A); //Detects Balls at the Hood
 
 controller con = controller(primary);
 
