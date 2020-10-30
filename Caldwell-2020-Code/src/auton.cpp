@@ -528,67 +528,67 @@ void homerowskills() {
 
 void diagonalSkills() {
   driveReset(48, 9, 0);
-  turnSlide(60, 24, 0);
+  turnSlide(60, 24, 0); //Drives out of the way of the ball on-field.
   turnSlide(60, 24, -90);
-  simultaneously(UNFOLD);
+  simultaneously(UNFOLD); //Unfolds with little danger of hitting nearby balls.
   task::sleep(1500);
-  turnSlide(50, 24, -90);
+  turnSlide(50, 24, -90); //Drives two inches from the ball.
   eatBall();
-  spinIntakes();
+  spinIntakes(); //Brings the ball into the robot.
 
   //First Goal
   turnSlide(36,36,-135, 80, 40, 999999, 8, 1, 100, turnD, 3, 3);
-  simultaneously(BTHNOINTAKES);
-  turnSlide(22,22,-135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2);
-  simultaneously(DESCORETWO);
+  simultaneously(BTHNOINTAKES); //Brings the ball to the hood.
+  turnSlide(22,22,-135,driveMax, turnMax, 999999, driveP, 0.4, driveD, turnD, 2, 2); //Drives close to the corner goal.
+  simultaneously(DESCORETWO); //Descores both blue balls out of the goal.
   goalAlign(600, 8);
   simultaneously(SCOREBALL);
   goalAlign(1000, 3);
-  scoreBall();
+  scoreBall(); //Scores both balls.
   simultaneously(OPENWIDE);
-  turnSlide(24,24,-135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3);
-  turnSlide(24, 24, 180);
-  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct);
+  turnSlide(24,24,-135, 90, 40, 999999, driveP, 1, 150, turnD, 3, 3); //Drives out of the goal area.
+  turnSlide(24, 24, 180); 
+  RollerMain.spin(directionType::fwd, 100, velocityUnits::pct); //Turns around and spits both balls out of the robot.
   RollerBack.spin(directionType::fwd, 100, velocityUnits::pct);
   task::sleep(2000);
   RollerMain.stop();
   RollerBack.stop();
   turnSlide(24, 24, 0);
   simultaneously(OPENWIDE);
-  turnSlide(72, 24, 0);
+  turnSlide(72, 24, 0); //Drives to the center goal.
   turnSlide(72, 34, 0);
   BalltoHood();
-  turnSlide(77, 36, 0);
+  turnSlide(77, 36, 0); //Aligns the left intake with the goal, to push a ball out the bottom.
   turnSlide(77, 52, 0);
 
   //Second Goal Descoring
   goalAlign(1000, 12);
-  turnSlide(77, 52, 0);
+  turnSlide(77, 52, 0); //Pushes two balls out the bottom of the center goal.
   goalAlign(1000, 12);
   turnSlide(72, 40, 0);
   turnSlide(72, 58, 0);
 
   //Second Goal
   goalAlign(500, 4);
-  scoreBall();
+  scoreBall(); //Scores the ball in the goal
   turnSlide(72, 48, 0);
-  turnSlide(96, 48, 0);
+  turnSlide(96, 48, 0); //Travels the the final corner goal.
   turnSlide(96, 58, 0);
   BalltoHood();
 
   //Third Goal
   turnSlide(122, 122, 45);
-  simultaneously(DESCORETWO);
+  simultaneously(DESCORETWO); //Descores both blue balls from the goal.
   goalAlign(600, 8);
-  simultaneously(SCOREBALL);
+  simultaneously(SCOREBALL); //Scores the ball.
   goalAlign(1000, 3);
   task::sleep(2000);
-  turnSlide(36, 36, 45);
+  turnSlide(36, 36, 45); //Backs out.
 }
 
 void autonomous(void) {
   Brain.resetTimer();
-  
+
   /* START THE TASKS */
   task positiontrackingtask = task(positionTrack);
   task multitasker = task(multitasker_callback);
